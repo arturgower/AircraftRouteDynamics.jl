@@ -1,0 +1,4 @@
+name = "AircraftRouteDynamics"
+uuid = "ca355a1f-b6bf-401d-8679-6e0e120ae4de"
+authors = ["arturgower <arturgower@gmail.com>"]
+version = "0.1.0"

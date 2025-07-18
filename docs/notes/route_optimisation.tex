@@ -1,0 +1,313 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{cleveref}
+
+\usepackage[
+  autocite    = superscript,
+  backend     = bibtex,
+  sortcites   = true,
+%   style       = numeric,
+  doi=false, url=true, isbn=false,
+  maxcitenames=2, maxbibnames=2
+  ]{biblatex}
+
+\bibliography{references}
+
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+% \renewcommand{\hat}[1]{\hat{\vec {#1}}}
+
+\title{Effective dynamics of an aircraft}
+
+\author{Art L. Gower, Matheus de Carvalho Loures, Paulo Piva}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+    To plan optimal aircraft routes we can not completely solve and describe 3D fluid structure interaction. This would be computationally very intense and unnecessary. Instead, we need to capture the main features related to fuel consumption, ability to turn, and affects from the atmosphere such as drag and lift. To achieve this we develop effective dynamical equations, together with a simple numerical scheme to solve these equations. The method is simple enough to using nonlinear optimisation to plan routes with minimal fuel, or distance, or time.  
+\end{abstract}
+
+\section{Equations of motion}
+The main forces acting on the aircraft are due to thrust, drag, lift, and a turning force. More accurately: an aircraft turns by rolling and then using lift, however we will not model these details, and instead have a turning force which is similar to a lift force.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width = 0.4\linewidth]{"plane-sketch.png"}
+    \caption{A sketch showing that the aircraft velocity vector is given by $\vec v$ (relative to the ground), and the velocity of the wind (relative to the ground) is given by $\vec u$. We approximate that the aircraft always points in the direction of travel.}
+    \label{fig:plane-sketch}
+\end{figure}
+
+As it is impractical to solve for even the rigid body dynamics of the aircraft, which would allow for rotations, we assume that the aircraft always points in the direction of travel. See \cref{fig:plane-sketch} for a sketch. 
+
+To describe the aircraft dynamics it is useful to use a local coordinate system with basis vectors:
+\begin{align}
+    & \vec e_v \quad \text{(the direction of travel)}
+    \\
+    & \vec e_r \quad \text{(radial direction from earth centre to aircraft)}
+    \\
+    & \vec e_p = \vec e_r \times \vec e_v  \quad \text{(perpendicular to travel direction)}
+\end{align}
+where we will only model the 2D dynamics and assume the altitude is fixed, so that $\vec e_v$ is always orthogonal to $\vec e_r$. Note that changes of altitude based on balance of lift with gravity can easily be accomodated without modelling the motion that leads to that change. 
+
+There are two main forces on the aircraft, those that can be controlled by the pilot $\vec f$ and those that external $\vec w$. The forces that can be controlled are: 
+\begin{equation}
+    \vec{f} =  T(\dot{m}) \vec{e}_v + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r,
+\end{equation}
+where $\dot m$ is the rate of change of mass in time (from using fuel), $v = |\vec v|$, $T(\dot{m},t)$ is the force from thrust, ${L_p}(v, \alpha)$ is a force which leads to turns in the $\vec e_p direction$, where $\alpha$ captures the amount the pilot tries to turn, and $L_r(v,\beta)$ are the lift forces, where $\beta$ is the amount to pilot tries to lift. 
+
+A simple and effective choice for thrust is
+\begin{equation}
+    T(\dot{m}) = - \dot m C_{T} \quad \text{and} \quad 
+    L_p (v, \alpha) = v^2 \alpha,
+\end{equation}
+where $C_T$ is a constant which describes how efficiently fuel burn $\dot m$ is converted into a thrust. More accurately, 
+\[
+C_T = \text{(exhaust velocity)} - \text{(relative airspeed)},
+\] 
+for subsonic flight \cite[Chapter 4]{anderson2005introduction}, where exhaust velocity is the speed of exhaust relative to the aircraft, and relative airspeed equals $|\vec v - \vec u|$ is the speed of air relative to the aircraft.
+
+A simple and effective formula for the turning force is
+\begin{equation}
+    L_p (v, \alpha) = |(\vec v - \vec u) \cdot \vec e_v|^2 \alpha.
+\end{equation}
+In practive, turning is due to rolling and then lift. The forces that lead to rolling and lift are due to wind drag, which is proportional to the relative airspeed in the direction of travel. The variable $\alpha$ is bounded: $\alpha \in [-C_\alpha, C_\alpha]$, where the positive constant $C_\alpha$ depends on the type of aircraft.
+
+The dynamics of the aircraft are now governed by balance of momentum:
+% \begin{equation}
+%     \vec{f}= \vec{w}(r,\vec{v},t) - T(\dot{m},t)\vec{e}_v+ \vec{L_c}(v(t), \alpha(t)) +\vec{L_u}(\vec{v}(t),\beta(t))
+% \end{equation}
+% We start supposing the the plane can only move in a spherical shell with coordinates $(\theta, \phi)$. We will write the problem in the coordinate of the perpendicular direction of the velocity ($\vec{e}_p$) and velocity direction ($\vec{e}_v$) in the spherical shell.
+% The Thrust force in general coordinates is:
+% \begin{equation}
+%   - T(\dot{m},t) \vec{e}_v(t)
+% \end{equation}
+% observe that the normal to $\vec{e}_v(t)$ is $\vec{e}_p(t)=\vec{e}_r(t)\times  \vec{e}_v(t)$ in the sphere surface. The normal component normal to the sphere surface is $\hat{e}_r$. The force to turn on the surface is then
+% \begin{equation}
+%     \vec{L}_c(\alpha(t),t)=L_c(\alpha(t),v(t))\vec{e}_p(t)
+% \end{equation}
+% while the lift force to turn in the radial direction is 
+% \begin{equation}
+%     \vec{L}_u(\alpha(t),t)=L_u(\alpha(t),v(t))\vec{e}_r(t)
+% \end{equation}
+% So $\vec{f}$ is given by:
+% \begin{equation}
+%     \vec{f}= \vec{w}(r,t)   - T(\dot{m},v(t)) \vec{e}_v(t)+ L_c(\alpha(t),v(t))\vec{e}_p(t) + L_u(\alpha(t),v(t))(\vec{e}_r(t)))
+% \end{equation}
+% Now we write the movement equations on the there directions ($\vec{e}_v(t), \hat n(t),\vec{e}_r(t)$)
+\begin{align}
+    % \frac{dp}{dt}= \vec{f} \implies 
+   \notag & \frac{d}{dt} (m(t) \vec{v}(t)) = \vec{f} + \vec{w} \implies
+\\ \label{eqns:motion-vector}
+    & \dot{m}\vec{v} + m \dot{\vec{v}} = T(\dot{m}) \vec{e}_v + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r + \vec w,
+% \implies
+% \\
+%     & \dot{m}(t)v(t)\vec{e}_v(t) +m(t)\dot v(t)\vec{e}_v(t) + m(t) v(t)\dot{\vec{e}_v}(t) = \vec{f}
+\end{align}
+where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v - \vec u$, however we do not need to give explicit forms for this forces, nor for the lift $L_r$ to simplify the equations of motion. 
+
+To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_v, \vec e_p, \vec e_r$.
+
+To find $\dot{\vec{e}_v}(t)=  (\dot{\vec{e}_v}(t) \cdot \vec{e}_r)\vec{e}_r +(\dot{\vec{e}_v}(t) \cdot \vec{e}_p)\vec{e}_p+ (\dot{\vec{e}_v}(t) \cdot \vec{e}_r)\vec{e}_r$ then we use that 
+
+\begin{equation}
+  \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_v)=0\quad \text{and} \quad \frac{d}{dt} (\vec{e}_v \cdot \vec{e}_r)=0  \quad \text{and} \quad \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_p) = 0
+\end{equation}
+
+So
+
+\begin{equation}
+   \dot{\vec{e}_v}(t)=  -(\dot{\vec{e}_p}(t) \cdot \vec{e}_v)\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec{e}_v)\vec{e}_r
+\end{equation}
+
+\begin{equation}
+    \dot{m}(t)v(t)\vec{e}_v(t) +m(t)\dot v(t)\vec{e}_v(t) + m(t) v(t)( -(\dot{\vec{e}_p}(t) \cdot \vec{e}_v)\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec{e}_v)\vec{e}_r) = \vec{f}
+\end{equation}
+
+then we isolate the terms in each direction, getting three differential equations
+
+\begin{align} \label{eqn:thrust-momentum}
+    &  \dot{m}(t)v(t) +m(t)\dot v(t)= w_h(r,v,t) - T(\dot{m},v(t))v(t) 
+    \\
+    \label{eqn:turn-momentum}
+    & - m(t) v(t)(\dot{\vec{e}_p}(t) \cdot \vec{e}_v) = w_n(r,v,t) + L_c(\alpha(t),v(t)
+    \\
+    \label{eqn:lift-momentum}
+    & -m(t) v(t)(\dot{\vec{e}_r}(t) \cdot \vec{e}_v)=w_r(r,v,t)+L_u(\beta(t),v(t))
+\end{align}
+
+\subsection{Forward marching numerical method}
+
+The above can be turned into a forward marching numerical method, which we briefly summarise below.
+
+Equation \eqref{eqn:thrust-momentum} can be used to update the speed $v(t)$ by substituting
+\[
+\dot { v}(t) = \frac{{v}(t+h) - {v}(t)}{h}.
+\]
+
+From the second equation \eqref{eqn:turn-momentum} we can update $\vec {e}_p$ and as a consequence $\vec e_v$. To start
+\[
+\dot{\vec e}_p = a {\vec e}_v + b {\vec e}_r, 
+\]
+because $\dot {\vec e}_p$ is orthogonal to ${\vec e}_p$. Equation \eqref{eqn:turn-momentum} gives us 
+\begin{equation}
+ a =  \dot{\vec{e}}_p \cdot \vec{e}_v = - (w_n(r,v,t) + L_c(\alpha(t),v(t) ) / (m(t) v(t)).
+\end{equation}
+To obtain $b$ we use 
+\begin{equation}
+b = \dot{\vec e}_p \cdot  {\vec e}_r = - {\vec e}_p \cdot  \dot {\vec e}_r =  - {\vec e}_p \cdot  {\vec v} / r = 0,    
+\end{equation}
+which is further explained below. 
+\[
+\vec{x}=r{\vec{e}}_r \Rightarrow \vec{v} =\dot{\vec{x}}=\dot{r}{\vec{e}}_r +r \dot{\vec{e}}_r \Rightarrow \dot{\vec{e}}_r=\frac{\vec{v}}{r} 
+\]
+We can then update our position in the spherical coordinate system $(r,\theta,\phi)$ using the following:
+\[
+\vec x = r [ \sin \phi \cos \theta, \sin \phi \sin \theta,   \cos \phi], 
+\]
+then $\dot{\vec x} = \vec v$, with $\vec v$ pointing in the direction of flight and being the velocity vector of the plane (relative to the ground). Rewriting in spherical coordinates we get
+\[
+\vec v = r \sin \phi  {\vec e_\theta} \dot \theta + r  {\vec e_\phi} \dot \phi, 
+\]
+ and also
+\begin{equation} \label{eqn:update_thetaphi}
+    r \sin \phi \dot \theta = \vec v \cdot {\vec e}_\theta  \quad \text{and} \quad 
+r \dot \phi = \vec v \cdot {\vec e}_\phi.
+\end{equation}
+For convenience we write the components of all  velocity vectors in the code in terms of the ${\vec e}_\theta, {\vec e}_\phi, {\vec e}_r$ coordinate system. That is, in the code, 
+\[
+\vec v[1] = \vec v \cdot {\vec e}_\theta, \quad 
+\vec v[2] = \vec v \cdot {\vec e}_\phi, 
+\quad 
+\vec v[3] = \vec v \cdot {\vec e}_r.
+\]
+We can then use the equations \eqref{eqn:update_thetaphi}  to calculate $\theta(t+h)$ and $\phi(t+h)$. 
+
+To summarize we can use the above to update the local coordinate system $\vec e_v$ and $\vec e_p$ through
+\begin{equation}
+    \vec e_p(t+h) = \vec e_p(t) + a h \vec e_v(t) \quad \text{and} \quad 
+    \vec e_v(t+h) = \vec e_p(t+h) \times \vec e_r,
+\end{equation}
+where using the coordinate system $(\theta,\phi,r)$ we always have that $\vec e_r = [0,0,1]$.
+
+\textbf{Art: I suppose we have to normalise $\vec e_p(t+h) $ so that it's magnitude does not stray over time?}
+
+
+\section{Finding the right altitude to keep a certain speed above the tropopause}
+
+The tropopause is the height that separates the troposphere and the stratosphere 
+
+The force balance in normal direction gives equilibrium of the plane at a constant altitude $H$. 
+The air density at a certain height can be approximated as
+
+\begin{equation}
+    \rho= \rho_{\text{trop}}e^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)},
+\end{equation}
+where the sub-index 'trop' means the tropopause value of the density,temperature, and altitude provided in the NATS guide. The pressure also follows the same behaviour.
+
+\begin{equation}
+    P= P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}
+\end{equation}
+The lift force is calculated as
+
+\begin{equation}
+    L_u= \frac{\beta C_L}{2} \rho u^2S
+\end{equation}
+Where $u=|\vec{v}-\vec{W}|$ is the speed of the plane related to the wind, m is the mass of the plane, g is gravity , S is the area of the wing  projected at the plane normal to $\vec{e}_r$, and $C_L$ is the lift coefficient with $\beta$ being its control parameter. From that we can see that the lift force is proportional to the density.  So the Lift force is 
+
+\begin{equation}
+    L_u= \frac{\beta C_L}{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} u^2S
+\end{equation}
+
+So the total external force on the direction $\vec{e}_r$ is 
+
+\begin{equation}
+    w_r=-mg -PA 
+\end{equation}
+
+where $A$ is the projected area of the whole plane.
+
+\begin{equation}
+    -m(t)\frac{v(t)^2}{r}=-mg- PA +L_u
+\end{equation}
+
+\begin{equation}
+     -m(t)\frac{v(t)^2}{r}=-mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}A +\frac{\beta C_L}{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} u^2S
+   \end{equation}
+
+notice that $r=R_{\text{earth}}+H$ and $R_{\text{earth}}>> H$, so we approximate $r\approx R_{\text{earth}}$
+\begin{equation}
+    -m\frac{v^2}{R_{\text{earth}}}= -mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}A +\frac{\beta C_L}{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} u^2S
+\end{equation}
+
+\begin{equation}
+\Rightarrow     -m\frac{v^2}{R_{\text{earth}}} +mg= \left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} u^2S\right) \mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}
+\end{equation}
+
+\begin{equation}
+  \Rightarrow \frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} u^2S\right)}=  \mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}    
+\end{equation}
+\begin{equation}
+  \Rightarrow \log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} u^2S\right)}\right)=  -\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)    
+\end{equation}
+
+Isolating $H$ and substituting $u$ we have that
+\begin{equation}
+    H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} |\vec v-\vec W|^2S\right)}\right)+h_{trop}
+\end{equation}
+
+ But $C_L$ in literature is given by
+\begin{equation}
+    C_L= \frac{2mg}{\rho_{\text{trop}} |\vec v-\vec W|^2S}
+\end{equation}
+
+\begin{equation}
+    \Rightarrow H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{-  P_{\text{trop}}A +\beta mg }\right)+h_{trop}
+\end{equation}
+
+\section{Finding the right altitude to keep a certain speed below the tropopause}
+
+The air density at a certain height can be approximated as
+
+\begin{equation}
+    \rho= \rho_0 \left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1}
+\end{equation}
+
+and the pressure is 
+
+\begin{equation}
+    P=P_0\left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}
+\end{equation}
+
+So the total external force on the direction $\vec{e}_r$ is 
+
+\begin{equation}
+    w_r=-mg -PA 
+\end{equation}
+
+where $A$ is the projected area of the whole plane.
+
+\begin{equation}
+    -m(t)\frac{v(t)^2}{r}=-mg+ L_u
+\end{equation}
+
+were we dropped the pressure term just to have an estimate height
+
+\begin{equation}
+  \Rightarrow \frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\frac{\beta C_L}{2} \rho_0 u^2S}=  \left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1}    
+\end{equation}
+
+\printbibliography
+
+\end{document}

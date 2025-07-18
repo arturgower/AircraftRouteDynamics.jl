@@ -108,13 +108,16 @@ The dynamics of the aircraft are now governed by balance of momentum:
 % Now we write the movement equations on the there directions ($\vec{e}_v(t), \hat n(t),\vec{e}_r(t)$)
 \begin{align}
     % \frac{dp}{dt}= \vec{f} \implies 
-    & \frac{d}{dt} (m(t) \vec{v}(t)) = \vec{f} + \vec{w} \implies
-\\
-    & \dot{m}\vec{v} + m \dot{\vec{v}} = T(\dot{m}) \vec{e}_v + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r + \vec w
+   \notag & \frac{d}{dt} (m(t) \vec{v}(t)) = \vec{f} + \vec{w} \implies
+\\ \label{eqns:motion-vector}
+    & \dot{m}\vec{v} + m \dot{\vec{v}} = T(\dot{m}) \vec{e}_v + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r + \vec w,
 % \implies
 % \\
 %     & \dot{m}(t)v(t)\vec{e}_v(t) +m(t)\dot v(t)\vec{e}_v(t) + m(t) v(t)\dot{\vec{e}_v}(t) = \vec{f}
 \end{align}
+where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v - \vec u$, however we do not need to give explicit forms for this forces, nor for the lift $L_r$ to simplify the equations of motion. 
+
+To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_v, \vec e_p, \vec e_r$.
 
 To find $\dot{\vec{e}_v}(t)=  (\dot{\vec{e}_v}(t) \cdot \vec{e}_r)\vec{e}_r +(\dot{\vec{e}_v}(t) \cdot \vec{e}_p)\vec{e}_p+ (\dot{\vec{e}_v}(t) \cdot \vec{e}_r)\vec{e}_r$ then we use that 
 

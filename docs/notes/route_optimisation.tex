@@ -117,31 +117,40 @@ The dynamics of the aircraft are now governed by balance of momentum:
 \end{align}
 where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v - \vec u$, however we do not need to give explicit forms for this forces, nor for the lift $L_r$ to simplify the equations of motion. 
 
-To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_v, \vec e_p, \vec e_r$.
+To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_v, \vec e_p, \vec e_r$. First we assume that the external forces can be decomposed in the form:
+\[
+\vec w = w_v \vec e_v + w_p \vec e_p + w_r \vec e_r.
+\]
 
-To find $\dot{\vec{e}_v}(t)=  (\dot{\vec{e}_v}(t) \cdot \vec{e}_r)\vec{e}_r +(\dot{\vec{e}_v}(t) \cdot \vec{e}_p)\vec{e}_p+ (\dot{\vec{e}_v}(t) \cdot \vec{e}_r)\vec{e}_r$ then we use that 
-
-\begin{equation}
-  \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_v)=0\quad \text{and} \quad \frac{d}{dt} (\vec{e}_v \cdot \vec{e}_r)=0  \quad \text{and} \quad \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_p) = 0
+Next we rewrite the expression:
+\begin{equation} \label{eqn:mass-momentum}
+    \dot{m}\vec{v} + m \dot{\vec{v}} = \dot{m}v \vec{e}_v + m \dot v \vec{e}_v + m v \dot{\vec{e}}_v.
 \end{equation}
-
-So
-
-\begin{equation}
-   \dot{\vec{e}_v}(t)=  -(\dot{\vec{e}_p}(t) \cdot \vec{e}_v)\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec{e}_v)\vec{e}_r
-\end{equation}
-
-\begin{equation}
-    \dot{m}(t)v(t)\vec{e}_v(t) +m(t)\dot v(t)\vec{e}_v(t) + m(t) v(t)( -(\dot{\vec{e}_p}(t) \cdot \vec{e}_v)\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec{e}_v)\vec{e}_r) = \vec{f}
-\end{equation}
-
-then we isolate the terms in each direction, getting three differential equations
-
+To rewrite $\dot{\vec{e}}_v$ we use the standard identities for basis vectors $\frac{d}{dt}(\vec{e}_v \cdot \vec{e}_v)=0$
+% \begin{equation}
+%   \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_v)=0, \quad \frac{d}{dt} (\vec{e}_v \cdot \vec{e}_r)=0,  \quad \text{and} \quad \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_p) = 0,
+% \end{equation}
+to conclude that $\dot{\vec{e}}_v$ is orthogonal to ${\vec{e}}_v$ and can be expanded in the form:
+\[
+\dot{\vec{e}}_v =  (\dot{\vec{e}}_v \cdot \vec{e}_p)\vec{e}_p + (\dot{\vec{e}}_v \cdot \vec{e}_r)\vec{e}_r,
+\] 
+which combined with \eqref{eqn:mass-momentum}, and the separation of the external forces, leads us to rewrite the equations of motion \eqref{eqns:motion-vector} in the form 
+\[ 
+a_v \vec e_v + a_p \vec e_p + a_r \vec e_r = 0,
+\]
+from which we obtain that three equations $a_v =0$, $a_p =0$, and $a_r =0$, which written in full become:
+% \begin{equation}
+%    \dot{\vec{e}_v}(t)=  -(\dot{\vec{e}_p}(t) \cdot \vec{e}_v)\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec{e}_v)\vec{e}_r
+% \end{equation}
+% \begin{equation}
+%     \dot{m}(t)v(t)\vec{e}_v(t) +m(t)\dot v(t)\vec{e}_v(t) + m(t) v(t)( -(\dot{\vec{e}_p}(t) \cdot \vec{e}_v)\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec{e}_v)\vec{e}_r) = \vec{f}
+% \end{equation}
+% then we isolate the terms in each direction, getting three differential equations
 \begin{align} \label{eqn:thrust-momentum}
-    &  \dot{m}(t)v(t) +m(t)\dot v(t)= w_h(r,v,t) - T(\dot{m},v(t))v(t) 
+    &  \dot{m} v + m \dot v = w_r + T(\dot{m},v) 
     \\
     \label{eqn:turn-momentum}
-    & - m(t) v(t)(\dot{\vec{e}_p}(t) \cdot \vec{e}_v) = w_n(r,v,t) + L_c(\alpha(t),v(t)
+    &  m(t) v(t)({\vec{e}}_p \cdot \dot{\vec{e}}_v) = w_n(r,v,t) + L_c(\alpha(t),v(t)
     \\
     \label{eqn:lift-momentum}
     & -m(t) v(t)(\dot{\vec{e}_r}(t) \cdot \vec{e}_v)=w_r(r,v,t)+L_u(\beta(t),v(t))

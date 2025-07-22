@@ -136,9 +136,9 @@ to conclude that $\dot{\vec{e}}_v$ is orthogonal to ${\vec{e}}_v$ and can be exp
 \] 
 which combined with \eqref{eqn:mass-momentum}, and the separation of the external forces, leads us to rewrite the equations of motion \eqref{eqns:motion-vector} in the form 
 \[ 
-a_v \vec e_v + a_p \vec e_p + a_r \vec e_r = 0,
+a_v \vec e_v + a_p \vec e_p + a_r \vec e_r = 0.
 \]
-from which we obtain that three equations $a_v =0$, $a_p =0$, and $a_r =0$, which written in full become:
+The above then implies that $a_v =0$, $a_p =0$, and $a_r =0$, which written in full become:
 % \begin{equation}
 %    \dot{\vec{e}_v}(t)=  -(\dot{\vec{e}_p}(t) \cdot \vec{e}_v)\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec{e}_v)\vec{e}_r
 % \end{equation}
@@ -147,70 +147,91 @@ from which we obtain that three equations $a_v =0$, $a_p =0$, and $a_r =0$, whic
 % \end{equation}
 % then we isolate the terms in each direction, getting three differential equations
 \begin{align} \label{eqn:thrust-momentum}
-    &  \dot{m} v + m \dot v = w_r + T(\dot{m},v) 
+    &  \dot{m} v + m \dot v = w_r + T(\dot{m},v),
     \\
     \label{eqn:turn-momentum}
-    &  m(t) v(t)({\vec{e}}_p \cdot \dot{\vec{e}}_v) = w_n(r,v,t) + L_c(\alpha(t),v(t)
+    &  m(t) v(t)({\vec{e}}_p \cdot \dot{\vec{e}}_v) = w_n(r,v,t) + L_c(\alpha(t),v(t),
     \\
     \label{eqn:lift-momentum}
-    & -m(t) v(t)(\dot{\vec{e}_r}(t) \cdot \vec{e}_v)=w_r(r,v,t)+L_u(\beta(t),v(t))
+    & m(t) v(t)({\vec{e}_r}(t) \cdot \dot{\vec{e}}_v)=w_r(r,v,t)+L_u(\beta(t),v(t)).
 \end{align}
 
 \subsection{Forward marching numerical method}
 
-The above can be turned into a forward marching numerical method, which we briefly summarise below.
-
-Equation \eqref{eqn:thrust-momentum} can be used to update the speed $v(t)$ by substituting
+Let us start by choosing a position $\vec x$ for the aircraft in a spherical coordinate system $(r,\theta,\phi)$ with
 \[
-\dot { v}(t) = \frac{{v}(t+h) - {v}(t)}{h}.
+\vec x = r [ \sin \phi \cos \theta, \sin \phi \sin \theta,   \cos \phi].
 \]
-
-From the second equation \eqref{eqn:turn-momentum} we can update $\vec {e}_p$ and as a consequence $\vec e_v$. To start
-\[
-\dot{\vec e}_p = a {\vec e}_v + b {\vec e}_r, 
-\]
-because $\dot {\vec e}_p$ is orthogonal to ${\vec e}_p$. Equation \eqref{eqn:turn-momentum} gives us 
-\begin{equation}
- a =  \dot{\vec{e}}_p \cdot \vec{e}_v = - (w_n(r,v,t) + L_c(\alpha(t),v(t) ) / (m(t) v(t)).
-\end{equation}
-To obtain $b$ we use 
-\begin{equation}
-b = \dot{\vec e}_p \cdot  {\vec e}_r = - {\vec e}_p \cdot  \dot {\vec e}_r =  - {\vec e}_p \cdot  {\vec v} / r = 0,    
-\end{equation}
-which is further explained below. 
-\[
-\vec{x}=r{\vec{e}}_r \Rightarrow \vec{v} =\dot{\vec{x}}=\dot{r}{\vec{e}}_r +r \dot{\vec{e}}_r \Rightarrow \dot{\vec{e}}_r=\frac{\vec{v}}{r} 
-\]
-We can then update our position in the spherical coordinate system $(r,\theta,\phi)$ using the following:
-\[
-\vec x = r [ \sin \phi \cos \theta, \sin \phi \sin \theta,   \cos \phi], 
-\]
-then $\dot{\vec x} = \vec v$, with $\vec v$ pointing in the direction of flight and being the velocity vector of the plane (relative to the ground). Rewriting in spherical coordinates we get
+Then the velocity vector of aircraft is given by $\dot{\vec x} = \vec v$, with $\vec v$ pointing in the direction of flight (relative to the ground). Rewriting in spherical coordinates we get
 \[
 \vec v = r \sin \phi  {\vec e_\theta} \dot \theta + r  {\vec e_\phi} \dot \phi, 
 \]
- and also
+by assuming that the height $r$ is fixed. Then, from the above we deduce that
 \begin{equation} \label{eqn:update_thetaphi}
     r \sin \phi \dot \theta = \vec v \cdot {\vec e}_\theta  \quad \text{and} \quad 
 r \dot \phi = \vec v \cdot {\vec e}_\phi.
 \end{equation}
-For convenience we write the components of all  velocity vectors in the code in terms of the ${\vec e}_\theta, {\vec e}_\phi, {\vec e}_r$ coordinate system. That is, in the code, 
+From the above we can see that it is convenient to write the components $\vec v$ in terms of the local coordinate system ${\vec e}_\theta, {\vec e}_\phi, {\vec e}_r$ coordinate system. That is, in the code, 
 \[
 \vec v[1] = \vec v \cdot {\vec e}_\theta, \quad 
 \vec v[2] = \vec v \cdot {\vec e}_\phi, 
 \quad 
 \vec v[3] = \vec v \cdot {\vec e}_r.
 \]
-We can then use the equations \eqref{eqn:update_thetaphi}  to calculate $\theta(t+h)$ and $\phi(t+h)$. 
+We can then use the equations \eqref{eqn:update_thetaphi}  to calculate $\theta(t+h)$ and $\phi(t+h)$ by substituting 
+\[
+\dot \theta = \frac{ \theta(t+h) - \theta(t)}{h} \quad \text{and} \quad 
+\dot \phi = \frac{ \phi(t+h) - \phi(t)}{h},
+\]
+into \eqref{eqn:update_thetaphi} and solving for $\theta(t+h)$ and $\phi(t+h)$. For consistency, we have that the components of all vectors are given in terms of the local basis in the code.
 
+The equations of motion (\ref{eqn:thrust-momentum} - \ref{eqn:lift-momentum}) can now be turned into a forward marching numerical method to predict the trajectory of the aircraft, which we briefly summarise below.
+
+Equation \eqref{eqn:thrust-momentum} can be used to update the speed $v(t)$ by substituting
+\[
+\dot { v}(t) = \frac{{v}(t+h) - {v}(t)}{h},
+\]
+and then solving for ${v}(t+h)$. From the second equation \eqref{eqn:turn-momentum} we can update the direction $\vec {e}_v$ and as a consequence $\vec e_p$. To start
+\[
+\dot{\vec e}_v = a {\vec e}_p + b {\vec e}_r, 
+\]
+because $\dot {\vec e}_v$ is orthogonal to ${\vec e}_v$. Substituting the above into \eqref{eqn:turn-momentum} then leads to
+\begin{equation}
+ a =  {\vec{e}}_p \cdot \dot{\vec{e}}_v =  (w_n(r,v,t) + L_c(\alpha(t),v(t) ) / (m(t) v(t)).
+\end{equation}
+To obtain $b$ we use 
+\begin{equation}
+b = \dot{\vec e}_v \cdot  {\vec e}_r = - {\vec e}_v \cdot  \dot {\vec e}_r =  - {\vec e}_v \cdot  {\vec v} / r = - v / r,    
+\end{equation}
+where we also used the $\vec e_r = \vec r / r \implies \dot{\vec e}_r = \vec v / r$ for fixed $r$.
+
+
+
+% \eqref{eqn:turn-momentum} we can update $\vec {e}_p$ and as a consequence $\vec e_v$. To start
+% \[
+% \dot{\vec e}_p = a {\vec e}_v + b {\vec e}_r, 
+% \]
+% because $\dot {\vec e}_p$ is orthogonal to ${\vec e}_p$. Equation \eqref{eqn:turn-momentum} gives us 
+% \begin{equation}
+%  a =  \dot{\vec{e}}_p \cdot \vec{e}_v = - (w_n(r,v,t) + L_c(\alpha(t),v(t) ) / (m(t) v(t)).
+% \end{equation}
+% To obtain $b$ we use 
+% \begin{equation}
+% b = \dot{\vec e}_p \cdot  {\vec e}_r = - {\vec e}_p \cdot  \dot {\vec e}_r =  - {\vec e}_p \cdot  {\vec v} / r = 0,    
+% \end{equation}
+% which is further explained below. 
+% \[
+% \vec{x}=r{\vec{e}}_r \Rightarrow \vec{v} =\dot{\vec{x}}=\dot{r}{\vec{e}}_r +r \dot{\vec{e}}_r \Rightarrow \dot{\vec{e}}_r=\frac{\vec{v}}{r} 
+% \]
+ 
 To summarize we can use the above to update the local coordinate system $\vec e_v$ and $\vec e_p$ through
 \begin{equation}
-    \vec e_p(t+h) = \vec e_p(t) + a h \vec e_v(t) \quad \text{and} \quad 
-    \vec e_v(t+h) = \vec e_p(t+h) \times \vec e_r,
+    \vec e_v(t+h) = \vec e_v(t) + a h \vec e_p(t) - \frac{v h}{r} \vec e_r(t)   \quad \text{and} \quad 
+    \vec e_p(t+h) = \vec e_r \times \vec e_v(t+h),
 \end{equation}
 where using the coordinate system $(\theta,\phi,r)$ we always have that $\vec e_r = [0,0,1]$.
 
-\textbf{Art: I suppose we have to normalise $\vec e_p(t+h) $ so that it's magnitude does not stray over time?}
+% \textbf{Art: I suppose we have to normalise $\vec e_p(t+h) $ so that it's magnitude does not stray over time?}
 
 
 \section{Finding the right altitude to keep a certain speed above the tropopause}

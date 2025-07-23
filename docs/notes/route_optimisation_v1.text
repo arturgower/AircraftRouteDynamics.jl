@@ -40,8 +40,7 @@
 \end{abstract}
 
 \section{Equations of motion}
-The main forces acting on the aircraft are due to thrust, drag, lift, and a turning force. More accurately: an aircraft turns by rolling and then using lift, however we will not model these details, and instead have a turning force which is similar to a lift force.See \cref{fig:plane-sketch} for a sketch. 
-
+The main forces acting on the aircraft are due to thrust, drag, lift, and a turning force. More accurately: an aircraft turns by rolling and then using lift, however we will not model these details, and instead have a turning force which is similar to a lift force.
 
 \begin{figure}[ht]
     \centering
@@ -50,38 +49,38 @@ The main forces acting on the aircraft are due to thrust, drag, lift, and a turn
     \label{fig:plane-sketch}
 \end{figure}
 
-% As it is impractical to solve for even the rigid body dynamics of the aircraft, which would allow for rotations, we assume that the aircraft always points in the direction of travel. 
+As it is impractical to solve for even the rigid body dynamics of the aircraft, which would allow for rotations, we assume that the aircraft always points in the direction of travel. See \cref{fig:plane-sketch} for a sketch. 
+
 To describe the aircraft dynamics it is useful to use a local coordinate system with basis vectors:
 \begin{align}
-    & \vec e_a \quad \text{(aligned with the direction of travel)}
+    & \vec e_v \quad \text{(the direction of travel)}
     \\
     & \vec e_r \quad \text{(radial direction from earth centre to aircraft)}
     \\
     & \vec e_p = \vec e_r \times \vec e_v  \quad \text{(perpendicular to travel direction)}
 \end{align}
-where we will only model the 2D dynamics and assume the altitude is fixed, so that $\vec e_a$ is always orthogonal to $\vec e_r$. Note that changes of altitude based on balance of lift with gravity can easily be accommodated without modelling the motion that leads to that change. 
+where we will only model the 2D dynamics and assume the altitude is fixed, so that $\vec e_v$ is always orthogonal to $\vec e_r$. Note that changes of altitude based on balance of lift with gravity can easily be accomodated without modelling the motion that leads to that change. 
 
 There are two main forces on the aircraft, those that can be controlled by the pilot $\vec f$ and those that external $\vec w$. The forces that can be controlled are: 
 \begin{equation}
-    \vec{f} =  T(\dot{m}) \vec{e}_a + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r,
+    \vec{f} =  T(\dot{m}) \vec{e}_v + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r,
 \end{equation}
-where $\dot m$ is the rate of change of mass in time (from using fuel), $v = |\vec v|$, $T(\dot{m})$ is the force from thrust, ${L_p}(v, \alpha)$ is a force which leads to turns in the $\vec e_p$ direction, where $\alpha$ captures the amount the pilot tries to turn, and $L_r(v,\beta)$ are the lift forces, where $\beta$ is the amount to pilot tries to lift. 
+where $\dot m$ is the rate of change of mass in time (from using fuel), $v = |\vec v|$, $T(\dot{m},t)$ is the force from thrust, ${L_p}(v, \alpha)$ is a force which leads to turns in the $\vec e_p direction$, where $\alpha$ captures the amount the pilot tries to turn, and $L_r(v,\beta)$ are the lift forces, where $\beta$ is the amount to pilot tries to lift. 
 
 A simple and effective choice for thrust is
 \begin{equation}
-    T(\dot{m}) = - \dot m C_{T},
-    %  \quad \text{and} \quad 
-    % L_p (v, \alpha) = v^2 \alpha,
+    T(\dot{m}) = - \dot m C_{T} \quad \text{and} \quad 
+    L_p (v, \alpha) = v^2 \alpha,
 \end{equation}
-where $C_T$ is a constant which describes how efficiently burning fuel $\dot m$ is converted into a thrust. More accurately, 
+where $C_T$ is a constant which describes how efficiently fuel burn $\dot m$ is converted into a thrust. More accurately, 
 \[
 C_T = \text{(exhaust velocity)} - \text{(relative airspeed)},
 \] 
-for subsonic flight \cite[Chapter 4]{anderson2005introduction}, where exhaust velocity is the speed of exhaust relative to the aircraft, and relative airspeed is equal to $|\vec v - \vec u|$.
+for subsonic flight \cite[Chapter 4]{anderson2005introduction}, where exhaust velocity is the speed of exhaust relative to the aircraft, and relative airspeed equals $|\vec v - \vec u|$ is the speed of air relative to the aircraft.
 
 A simple and effective formula for the turning force is
 \begin{equation}
-    L_p (v, \alpha) = |(\vec v - \vec u) \cdot \vec e_a|^2 \alpha.
+    L_p (v, \alpha) = |(\vec v - \vec u) \cdot \vec e_v|^2 \alpha.
 \end{equation}
 In practive, turning is due to rolling and then lift. The forces that lead to rolling and lift are due to wind drag, which is proportional to the relative airspeed in the direction of travel. The variable $\alpha$ is bounded: $\alpha \in [-C_\alpha, C_\alpha]$, where the positive constant $C_\alpha$ depends on the type of aircraft.
 
@@ -111,29 +110,22 @@ The dynamics of the aircraft are now governed by balance of momentum:
     % \frac{dp}{dt}= \vec{f} \implies 
    \notag & \frac{d}{dt} (m(t) \vec{v}(t)) = \vec{f} + \vec{w} \implies
 \\ \label{eqns:motion-vector}
-    & \dot{m}\vec{v} + m \dot{\vec{v}} = T(\dot{m}) \vec{e}_a + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r + \vec w,
+    & \dot{m}\vec{v} + m \dot{\vec{v}} = T(\dot{m}) \vec{e}_v + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r + \vec w,
 % \implies
 % \\
 %     & \dot{m}(t)v(t)\vec{e}_v(t) +m(t)\dot v(t)\vec{e}_v(t) + m(t) v(t)\dot{\vec{e}_v}(t) = \vec{f}
 \end{align}
 where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v - \vec u$, however we do not need to give explicit forms for this forces, nor for the lift $L_r$ to simplify the equations of motion. 
 
-To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_a, \vec e_p, \vec e_r$. First we assume that the external forces can be decomposed in the form:
+To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_v, \vec e_p, \vec e_r$. First we assume that the external forces can be decomposed in the form:
 \[
-\vec w = w_a \vec e_a + w_p \vec e_p + w_r \vec e_r.
+\vec w = w_v \vec e_v + w_p \vec e_p + w_r \vec e_r.
 \]
 
-Next we use $\vec v = v_a \vec e_a + v_p \vec e_p$ to rewrite the expression:
+Next we rewrite the expression:
 \begin{equation} \label{eqn:mass-momentum}
-    \dot{m}\vec{v} + m \dot{\vec{v}} = v_a \vec e_a + v_p \vec e_p,
-    % \dot{m}v \vec{e}_v + m \dot v \vec{e}_v + m v \dot{\vec{e}}_v.
+    \dot{m}\vec{v} + m \dot{\vec{v}} = \dot{m}v \vec{e}_v + m \dot v \vec{e}_v + m v \dot{\vec{e}}_v.
 \end{equation}
-where we also used 
-\[
-\dot{\vec{e}}_a =  (\dot{\vec{e}}_a \cdot \vec{e}_p)\vec{e}_p + (\dot{\vec{e}}_a \cdot \vec{e}_r)\vec{e}_r \quad 
-\dot{\vec{e}}_p =  (\dot{\vec{e}}_p \cdot \vec{e}_a)\vec{e}_a + (\dot{\vec{e}}_p \cdot \vec{e}_r)\vec{e}_r.
-\] 
-
 To rewrite $\dot{\vec{e}}_v$ we use the standard identities for basis vectors $\frac{d}{dt}(\vec{e}_v \cdot \vec{e}_v)=0$
 % \begin{equation}
 %   \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_v)=0, \quad \frac{d}{dt} (\vec{e}_v \cdot \vec{e}_r)=0,  \quad \text{and} \quad \frac{d}{dt}(\vec{e}_v \cdot \vec{e}_p) = 0,

@@ -14,16 +14,18 @@ include("types.jl")
 
 # dmdt = mass rate in time
 thrust_force(dmdt) = dmdt; 
-perpendicular_force(v_old, α) = α * norm(v_old)^2 
-
-function drag_force_2D(θ, ϕ, wind_function, v_vec, aircraft::Aircraft)
-    U = wind_function(θ, ϕ);
-    return -(aircraft.drag_coefficient * sqrt(sum((v_vec .- U).^2))) .* (v_vec - U)
+function perpendicular_force(wind_vec, speed_old, basis_align, α) 
+    return α * (speed_old -  dot(wind_vec, basis_align))^2 
 end
 
-function drag_force_3D(θ, ϕ, z, wind_function, v_vec, aircraft::Aircraft)
-    U = wind_function(θ, ϕ, z)
-    return -(aircraft.drag_coefficient * sqrt(sum((v_vec .- U).^2))) .* (v_vec - U)
+function drag_force_2D(wind_vec, v_vec, aircraft::Aircraft)
+
+    return -(aircraft.drag_coefficient * sqrt(sum((v_vec .- wind_vec).^2))) .* (v_vec - wind_vec)
+end
+
+function drag_force_3D(wind_vec, v_vec, aircraft::Aircraft)
+    # U = wind_function(θ, ϕ, z)
+    return -(aircraft.drag_coefficient * sqrt(sum((v_vec .- wind_vec).^2))) .* (v_vec - wind_vec)
 end
 
 
@@ -33,15 +35,14 @@ function speed_new(speed, m, dmdt, dt, w_basis_align)
     return speed + dsdt * dt;
 end
 
-function basis_perp_new(basis_perp_old, basis_align_old, speed_old, turn, mass, dt, external_force_perp)
-
-    velocity_old = speed_old .* basis_align_old;
+function basis_perp_new(basis_perp_old, basis_align_old, wind_vec, speed_old, turn, mass, dt, external_force_perp)
+   
 
     a = if speed_old ≈ 0.0 
         0.0
     else
-        -(perpendicular_force(velocity_old, turn) + external_force_perp) / (mass * speed_old)
-    end    
+        -(perpendicular_force(wind_vec, speed_old, basis_align_old, turn) + external_force_perp) / (mass * speed_old)
+    end
 
     basis_perp = basis_perp_old + a*dt*basis_align_old  
     basis_perp = basis_perp ./ norm(basis_perp)
@@ -110,9 +111,11 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
         dmdt = (fuels[i+1] - fuels[i]) / dt
 
         # external forces
-        drag = drag_force_2D(θs[i], φs[i], wind_speed, speeds[i] * basis_align_old[1:2], aircraft)
-        external_force_align = dot(drag, basis_align_old[1:2]);
-        external_force_perp = dot(drag, basis_perp_old[1:2]);
+        U = wind_speed(θs[i], φs[i]);
+        U = [U; 0.0]
+        drag = drag_force_2D(U, speeds[i] * basis_align_old, aircraft)
+        external_force_align = dot(drag, basis_align_old);
+        external_force_perp = dot(drag, basis_perp_old);
 
         forces[i] = drag;
         
@@ -121,7 +124,7 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
         speed = speed_new(speeds[i], mass, dmdt,dt,external_force_align)
 
         # update local coordinates
-        basis_perp = basis_perp_new(basis_perp_old, basis_align_old, speeds[i], turns[i], mass, dt, external_force_perp)
+        basis_perp = basis_perp_new(basis_perp_old, basis_align_old, U, speeds[i], turns[i], mass, dt, external_force_perp)
         basis_align = cross(basis_perp,er)
 
         θφ = θφ_new([θs[i],φs[i]], speed .* basis_align, dt, aircraft.height)

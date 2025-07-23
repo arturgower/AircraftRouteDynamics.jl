@@ -46,7 +46,8 @@ The main forces acting on the aircraft are due to thrust, drag, lift, and a turn
 \begin{figure}[ht]
     \centering
     \includegraphics[width = 0.4\linewidth]{"plane-sketch.png"}
-    \caption{A sketch showing that the aircraft velocity vector is given by $\vec v$ (relative to the ground), and the velocity of the wind (relative to the ground) is given by $\vec u$. We approximate that the aircraft always points in the direction of travel.}
+    \caption{A sketch showing that the aircraft velocity vector is given by $\vec v$ (relative to the ground), and the velocity of the wind (relative to the ground) is given by $\vec u$. 
+    }
     \label{fig:plane-sketch}
 \end{figure}
 
@@ -116,7 +117,20 @@ The dynamics of the aircraft are now governed by balance of momentum:
 % \\
 %     & \dot{m}(t)v(t)\vec{e}_v(t) +m(t)\dot v(t)\vec{e}_v(t) + m(t) v(t)\dot{\vec{e}_v}(t) = \vec{f}
 \end{align}
-where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v - \vec u$, however we do not need to give explicit forms for this forces, nor for the lift $L_r$ to simplify the equations of motion. 
+where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v - \vec u$, however we do not need to give explicit forms for this forces.
+
+For the lift force $L_r$, we assume it is enough to balance the external vertical, or radial, forces. That is, by taking dot product of $\vec e_r$ on either side of \eqref{eqns:motion-vector}, and using $\vec w \cdot \vec e_r = -  {L_r}(\vec v - \vec u,\beta)$ we obtain:
+\begin{equation}
+    m \dot{\vec{v}} \cdot \vec e_r = - \dot{m}\vec{v} \cdot \vec e_r.
+\end{equation}
+
+nor for the lift $L_r$ to simplify the equations of motion. 
+
+Equation \eqref{eqns:motion-vector} can be used to update the velocity vector $\vec v$ in time, which we show in more detail in the next section. 
+
+Turning the plane also changes its orientation, which as a consequence changes the basis vectors $\vec e_a$ and $\vec e_p$. To capture this we can use:
+
+
 
 To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_a, \vec e_p, \vec e_r$. First we assume that the external forces can be decomposed in the form:
 \[
@@ -125,7 +139,7 @@ To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms
 
 Next we use $\vec v = v_a \vec e_a + v_p \vec e_p$ to rewrite the expression:
 \begin{equation} \label{eqn:mass-momentum}
-    \dot{m}\vec{v} + m \dot{\vec{v}} = v_a \vec e_a + v_p \vec e_p,
+    \dot{m}\vec{v} + m \dot{\vec{v}} = \dot v_a \vec e_a + \dot v_p \vec e_p + \dot v_r \vec e_r,
     % \dot{m}v \vec{e}_v + m \dot v \vec{e}_v + m v \dot{\vec{e}}_v.
 \end{equation}
 where we also used 
@@ -170,7 +184,7 @@ Let us start by choosing a position $\vec x$ for the aircraft in a spherical coo
 \[
 \vec x = r [ \sin \phi \cos \theta, \sin \phi \sin \theta,   \cos \phi].
 \]
-Then the velocity vector of aircraft is given by $\dot{\vec x} = \vec v$, with $\vec v$ pointing in the direction of flight (relative to the ground). Rewriting in spherical coordinates we get
+Then the velocity vector of the aircraft is given by $\dot{\vec x} = \vec v$, with $\vec v$. Rewriting in spherical coordinates we get
 \[
 \vec v = r \sin \phi  {\vec e_\theta} \dot \theta + r  {\vec e_\phi} \dot \phi, 
 \]

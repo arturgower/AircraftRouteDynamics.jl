@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2022/dev/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: route_optimisation.aux
 The style file: biblatex.bst
@@ -19,29 +19,29 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: route_optimisation-blx.bib
 Database file #2: references.bib
-Biblatex version: 3.19
+Biblatex version: 3.17
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 You've used 2 entries,
             6399 wiz_defined-function locations,
-            1209 strings with 9150 characters,
-and the built_in function-call counts, 11277 in all, are:
-= -- 923
+            1209 strings with 9148 characters,
+and the built_in function-call counts, 11265 in all, are:
+= -- 922
 > -- 224
 < -- 72
 + -- 278
 - -- 71
-* -- 699
-:= -- 1325
+* -- 698
+:= -- 1323
 add.period$ -- 0
 call.type$ -- 2
 change.case$ -- 55
 chr.to.int$ -- 42
 cite$ -- 2
 duplicate$ -- 858
-empty$ -- 959
+empty$ -- 958
 format.name$ -- 68
-if$ -- 2431
+if$ -- 2428
 int.to.chr$ -- 0
 int.to.str$ -- 3
 missing$ -- 0
@@ -51,9 +51,9 @@ pop$ -- 403
 preamble$ -- 1
 purify$ -- 60
 quote$ -- 0
-skip$ -- 385
+skip$ -- 384
 stack$ -- 0
-substring$ -- 1792
+substring$ -- 1789
 swap$ -- 180
 text.length$ -- 48
 text.prefix$ -- 1

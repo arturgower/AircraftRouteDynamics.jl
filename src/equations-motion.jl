@@ -1,11 +1,3 @@
-using LinearAlgebra, Statistics
-using Optim
-using Accessors
-
-include("types.jl")
-# include("functions_for_wind.jl")
-
-
 # Definitions
 # v_vec = velocity vector of plane
 # v_vec = sv .* basis_align, where sv = norm(v)

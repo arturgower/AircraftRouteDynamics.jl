@@ -1,3 +1,10 @@
+using LinearAlgebra, Statistics
+using Optim
+using Accessors
+
+include("types.jl")
+
+
 include("equations-motion.jl")
 include("../test/plot.jl")
 # module AircraftRouteDynamics

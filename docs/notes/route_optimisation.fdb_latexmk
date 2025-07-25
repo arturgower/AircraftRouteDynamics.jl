@@ -1,16 +1,16 @@
 # Fdb version 4
-["bibtex route_optimisation"] 1753369348.76054 "route_optimisation.aux" "route_optimisation.bbl" "route_optimisation" 1753369350.07878 0
+["bibtex route_optimisation"] 1753461008.57172 "route_optimisation.aux" "route_optimisation.bbl" "route_optimisation" 1753461242.61747 0
   "./references.bib" 1753185869.86956 212 6426677088d00096568401a4bca3285b ""
-  "./route_optimisation-blx.bib" 1753369349.66331 342 8b302f14886172d2e8f8d19480b0a55f ""
+  "./route_optimisation-blx.bib" 1753461242.1942 342 8b302f14886172d2e8f8d19480b0a55f ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/biblatex/biblatex.bst" 1678141846 65484 b7949c47a88ed6dca66ebc7a04577312 ""
-  "route_optimisation.aux" 1753369349.66131 2910 fbc1b8adb35c0a12cda55b1f0f22a118 "pdflatex"
+  "route_optimisation.aux" 1753461242.1922 3031 21ed93f48dddd874c238603a19c0255f "pdflatex"
   (generated)
   "route_optimisation.bbl"
   "route_optimisation.blg"
   (rewritten before read)
-["pdflatex"] 1753369348.85567 "/home/artur/.julia/dev/AircraftRouteDynamics/docs/notes/route_optimisation.tex" "route_optimisation.pdf" "route_optimisation" 1753369350.07902 0
+["pdflatex"] 1753461241.37465 "/home/artur/.julia/dev/AircraftRouteDynamics/docs/notes/route_optimisation.tex" "route_optimisation.pdf" "route_optimisation" 1753461242.61771 0
   "/etc/texmf/web2c/texmf.cnf" 1727167948.13036 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/artur/.julia/dev/AircraftRouteDynamics/docs/notes/route_optimisation.tex" 1753369347.30032 17860 bd2fbb66170d4d3590a8bdd527baa4d1 ""
+  "/home/artur/.julia/dev/AircraftRouteDynamics/docs/notes/route_optimisation.tex" 1753461241.1602 19595 ed222b72666e7af8c7cc805edce82820 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1246382020 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -55,6 +55,7 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1248133631 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb" 1248133631 30457 bc0868ebece724ed7c3d37e3d9bff7bd ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb" 1248133631 39386 0bb525d495ceab21fe797301a586e0d7 ""
   "/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/share/texlive/texmf-dist/tex/generic/atbegshi/atbegshi.sty" 1575674566 24708 5584a51a7101caf7e6bbf1fc27d8f7b1 ""
   "/usr/share/texlive/texmf-dist/tex/generic/babel-english/english.ldf" 1496785618 7008 9ff5fdcc865b01beca2b0fe4a46231d4 ""
@@ -132,11 +133,11 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1729672913.70408 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1729672976 8213779 8a6c14ea0d2f8d23e3bc8a19bc993359 ""
   "plane-sketch.png" 1753185869.86956 171294 5adc71381de885ce4c3888a8d4940aaf ""
-  "route_optimisation.aux" 1753369349.66131 2910 fbc1b8adb35c0a12cda55b1f0f22a118 "pdflatex"
-  "route_optimisation.bbl" 1753369348.85131 1356 e07cdefe2c13b0f4eb06aee0e6e1e8c8 "bibtex route_optimisation"
-  "route_optimisation.out" 1753369349.66231 1237 5c3b6a0adf862ad07420d13e485eeff4 "pdflatex"
-  "route_optimisation.run.xml" 1753369349.66431 2648 c9d0e38da1e9bd3548a7024cb9cac016 "pdflatex"
-  "route_optimisation.tex" 1753369347.30032 17860 bd2fbb66170d4d3590a8bdd527baa4d1 ""
+  "route_optimisation.aux" 1753461242.1922 3031 21ed93f48dddd874c238603a19c0255f "pdflatex"
+  "route_optimisation.bbl" 1753461008.68873 1356 e07cdefe2c13b0f4eb06aee0e6e1e8c8 "bibtex route_optimisation"
+  "route_optimisation.out" 1753461242.1932 1367 1cfde2f26874f794a8239c0f22761f86 "pdflatex"
+  "route_optimisation.run.xml" 1753461242.1952 2648 c9d0e38da1e9bd3548a7024cb9cac016 "pdflatex"
+  "route_optimisation.tex" 1753461241.1602 19595 ed222b72666e7af8c7cc805edce82820 ""
   (generated)
   "route_optimisation-blx.bib"
   "route_optimisation.aux"

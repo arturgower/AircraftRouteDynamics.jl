@@ -1,4 +1,4 @@
-include("equations-motion.jl")
+include("../src/AircraftRouteDynamics.jl")
 
 # Calculate an optimal route
     N = 120;
@@ -62,14 +62,14 @@ include("equations-motion.jl")
     norm(setup.θφ_end - [r.θs[end], r.φs[end]])^2
 
     using Plots
-    include("plot.jl")
+    # include("plot.jl")
 
     wind_speed_plot(x, y) = 0.03 .* wind_speed(x, y)
 
-    wind_plot(setup,wind_speed_plot)
+    plot(setup,wind_speed_plot)
 
-    scatter!(r.θs,r.φs, label = "route")
-    scatter!(setup.θφ_end[1:1], setup.θφ_end[2:2], label = "Target destination", markersize = 3.0)
+    scatter!(r.θs,r.φs, label = "route", markersize = 3.0)
+    scatter!(setup.θφ_end[1:1], setup.θφ_end[2:2], label = "Target destination", markersize = 4.0)
     # savefig("constant-wind-optimal.pdf")
 
     # plot(turns)

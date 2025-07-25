@@ -150,7 +150,7 @@ The above then implies that $a_v =0$, $a_p =0$, and $a_r =0$, which written in f
     &  \dot{m} v + m \dot v = w_r + T(\dot{m},v),
     \\
     \label{eqn:turn-momentum}
-    &  m(t) v(t)({\vec{e}}_p \cdot \dot{\vec{e}}_v) = w_n(r,v,t) + L_c(\alpha(t),v(t)),
+    &  m(t) v(t)({\vec{e}}_p \cdot \dot{\vec{e}}_v) = w_p(r,v,t) + L_c(\alpha(t),v(t)),
     \\
     \label{eqn:lift-momentum}
     & m(t) v(t)({\vec{e}_r}(t) \cdot \dot{\vec{e}}_v)=w_r(r,v,t)+L_u(\beta(t),v(t)).
@@ -197,7 +197,7 @@ and then solving for ${v}(t+h)$. From the second equation \eqref{eqn:turn-moment
 \]
 because $\dot {\vec e}_v$ is orthogonal to ${\vec e}_v$. Substituting the above into \eqref{eqn:turn-momentum} then leads to
 \begin{equation}
- a =  {\vec{e}}_p \cdot \dot{\vec{e}}_v =  (w_n(r,v,t) + L_c(\alpha(t),v(t) ) / (m(t) v(t)).
+ a =  {\vec{e}}_p \cdot \dot{\vec{e}}_v =  (w_p(r,v,t) + L_c(\alpha(t),v(t) ) / (m(t) v(t)).
 \end{equation}
 To obtain $b$ we use 
 \begin{equation}
@@ -238,6 +238,27 @@ where using the coordinate system $(\theta,\phi,r)$ we always have that $\vec e_
 
 % \textbf{Art: I suppose we have to normalise $\vec e_p(t+h) $ so that it's magnitude does not stray over time?}
 
+\subsection{Optimal routes}
+
+The simplest way to find optimal routes if through the shooting method. That is, a few initial guesses are made, and then a nonlinear optimiser will try different values for the control variables thrust $\dot m$ and aircraft turning $\alpha$ to achieve some goal. 
+
+The most basic goal is to achieve a target destination $\vec x_B$. Let the start and end of the flight time be $t_A$ and $t_B$, so that the last position of a simulated flight is $\vec x(t_B$). Then we use a nonlinear optimiser to minimise:
+\[
+\min_{\vec \alpha, \dot{\vec m}} | \vec x(t_B) - \vec x_B|,
+\]
+where the control variables are
+\[
+\vec \alpha = [\alpha(t_A), \alpha(t_A+h), \ldots, \alpha(t_B)] \;\; \text{and} \;\; 
+\dot{\vec m} = [\dot m(t_A), \dot m(t_A+h) \ldots, \dot m(t_B)].
+\]
+
+In practice, instead of controlling $\alpha(t)$ and $\dot m(t)$ for every time step, we can instead represent each of these as piece-wise constant functions, each with about 10 different steps, and then minimise for the total of 20 steps. This allows us to refine simulations by making $dt$ small while having a small number of control variables.
+
+Naturally, we can also minimise the flight time as well as achieve the destination $\vec x_B$, which leads to the objective function:
+\[
+\min_{\vec \alpha, \dot{\vec m}} c_t | t_B - t_A| + | \vec x(t_B) - \vec x_B|, \quad \text{(minimise flight time)}
+\]
+where $c_t$ is an appropriately chosen constant. To make the above robust, we should in fact non-dimensionalise each of the parts, and use a constant, such as $c_t$ to give the appropriate weighting. For example, in the code ... make the goal of minimising the total flight time 100 times less important than achieve the final destination.
 
 \section{Finding the right altitude to keep a certain speed above the tropopause}
 

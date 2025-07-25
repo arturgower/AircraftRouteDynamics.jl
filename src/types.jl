@@ -30,6 +30,7 @@ end
 struct Aircraft
     height::Float64
     drag_coefficient::Float64
+    fuel_efficiency_coefficient::Float64
     empty_weight::Float64
     fuel_burn_rate::Float64 # burn rate in time
     fuel::Float64 # total fuel
@@ -47,6 +48,7 @@ struct RouteSetup
 end
 
 function Aircraft(;
+        fuel_efficiency_coefficient = 1.0,
         height = 8,
         drag_coefficient = 0.2,
         empty_weight = 2.0,
@@ -54,7 +56,7 @@ function Aircraft(;
         fuel_burn_rate = 6.0,
         fuel = 6.0
     )
-    return Aircraft(height,drag_coefficient,empty_weight,fuel_burn_rate,fuel,typical_speed)
+    return Aircraft(height,drag_coefficient,fuel_efficiency_coefficient,empty_weight,fuel_burn_rate,fuel,typical_speed)
 end
 
 function RouteSetup(; 

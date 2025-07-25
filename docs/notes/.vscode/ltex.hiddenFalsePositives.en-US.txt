@@ -1,1 +1,2 @@
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe equations of motion (\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q - \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q) can be turned into a forward marching numerical method, which we briefly summarise below.\\E$"}
+{"rule":"SMALL_NUMBER_OF","sentence":"^\\QThis allows us to refine simulations by making \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q small while having a small number of control variables.\\E$"}

@@ -1,3 +1,4 @@
 using Test
 
-include("equations-motion.jl")
+include("../src/equations-motion.jl")
+

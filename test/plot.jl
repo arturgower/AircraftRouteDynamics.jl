@@ -1,19 +1,26 @@
-function wind_plot(setup, wind_speed; Nθ = 15, Nϕ = 14)
+using RecipesBase
 
-    θmin = 0.95 * min(setup.θφ_start[1], setup.θφ_end[1]);
-    θmax = 1.05 * max(setup.θφ_start[1], setup.θφ_end[1]);
-    ϕmin = 0.95 * min(setup.θφ_start[2], setup.θφ_end[2]);
-    ϕmax = 1.05 * max(setup.θφ_start[2], setup.θφ_end[2]);
+@recipe function plot(setup::RouteSetup, wind_speed::Function; 
+        Nθ = 15, Nφ = 14,
+        θmin = 0.98 * min(setup.θφ_start[1], setup.θφ_end[1]),
+        φmin = 0.98 * min(setup.θφ_start[2], setup.θφ_end[2]),
+        θmax = 1.02 * max(setup.θφ_start[1], setup.θφ_end[1]),
+        φmax = 1.02 * max(setup.θφ_start[2], setup.θφ_end[2]),
+    )
 
     dθ = (θmax - θmin) / Nθ;
-    dϕ = (ϕmax - ϕmin) / Nϕ;
+    dφ = (φmax - φmin) / Nφ;
 
     θs = θmin:dθ:θmax |> collect
-    ϕs = ϕmin:dϕ:ϕmax |> collect
+    φs = φmin:dφ:φmax |> collect
 
-    θθs = [θ for θ in θs, ϕ in ϕs]
-    ϕϕs = [ϕ for θ in θs, ϕ in ϕs]
+    θθs = [θ for θ in θs, ϕ in φs]
+    ϕϕs = [ϕ for θ in θs, ϕ in φs]
 
-    quiver(θθs, ϕϕs, quiver = wind_speed)
+    quiver := wind_speed
+
+    seriestype --> :quiver
+
+    θθs, ϕϕs
 end
 

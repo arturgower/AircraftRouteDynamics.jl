@@ -30,9 +30,9 @@ end
 
 
 function speed_new(speed, m, dmdt, dt, w_basis_align)
-    dsdt = (w_basis_align - speed * dmdt - thrust_force(dmdt)) / m
+    dvdt = (w_basis_align - speed * dmdt - thrust_force(dmdt)) / m
 
-    return speed + dsdt * dt;
+    return speed + dvdt * dt;
 end
 
 function basis_perp_new(basis_perp_old, basis_align_old, wind_vec, speed_old, turn, mass, dt, external_force_perp)
@@ -121,7 +121,7 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
         
         # update speed
         mass = fuels[i] + aircraft.empty_weight;
-        speed = speed_new(speeds[i], mass, dmdt,dt,external_force_align)
+        speed = speed_new(speeds[i], mass, dmdt, dt,external_force_align)
 
         # update local coordinates
         basis_perp = basis_perp_new(basis_perp_old, basis_align_old, U, speeds[i], turns[i], mass, dt, external_force_perp)

@@ -1,4 +1,4 @@
-include("equations-motion.jl")
+include("../src/AircraftRouteDynamics.jl")
 
 tornado_wind(x, y, wind_vel = 10.0) = wind_vel .* [-y+1.5, x-1.5] ./ (sqrt(x^2 + y^2))
 
@@ -82,13 +82,12 @@ wind_speed(x, y) = tornado_wind(x, y)
 
     # Plot the results
     using Plots
-    include("plot.jl")
 
-    gr(size = (340,260), markersize = 2.0, linewidth = 1.0)
+    gr(size = (440,360), markersize = 2.0, linewidth = 1.0)
     # wind_speed(x, y) = 0.01 .* wind_speed_interpol_2D(x, y, wind_data)
     wind_speed_plot(x, y) = 0.035 .* wind_speed(x, y)
 
-    wind_plot(setup,wind_speed_plot)
+    plot(setup,wind_speed_plot)
 
     plot!(r.θs,r.φs, label = "speed route", linewidth = 2.0)
     plot!(r_f.θs,r_f.φs, label = "fuel route", linewidth = 2.0)

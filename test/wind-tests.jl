@@ -30,7 +30,7 @@
     fuels = LinRange(10,4,N);
 
     # turns over time
-    turns = 0.0 .* fuel
+    turns = 0.0 .* fuels
 
     # wind speed vector
     wind_v = [0.0,0.0]
@@ -56,7 +56,7 @@
     ts = LinRange(0, setup.iterations * setup.dt, 1000);
     dt = ts[2] - ts[1]
 
-    integrate_ms= - dt ./ (dmdt .* ts .+ fuel[1] .+ aircraft.empty_weight);
+    integrate_ms= - dt ./ (dmdt .* ts .+ fuels[1] .+ aircraft.empty_weight);
     integrate_ms[1] = integrate_ms[end] / 2
     integrate_ms[end] = integrate_ms[end] / 2
 
@@ -73,7 +73,7 @@
     fuels = LinRange(10,4,N);
 
     # turns over time
-    turns = 0.0 .* fuel .- 0.3
+    turns = 0.0 .* fuels .- 0.3
 
     # wind speed vector
     wind_v = [0.5,0.3]

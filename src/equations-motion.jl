@@ -73,6 +73,8 @@ end
 function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0])
     aircraft = setup.aircraft
 
+    N = setup.iterations
+
     # initialise data
     θs = zeros(N); φs = zeros(N);
     forces = [zeros(2) for i = 1:N];
@@ -97,7 +99,7 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
     basis_perp_old = cross(er, basis_align_old)
 
     dt = setup.dt;
-    flight_time = dt * setup.iterations;
+    flight_time = dt * N;
 
     for i = 1:(N-1)
         dmdt = (fuels[i+1] - fuels[i]) / dt

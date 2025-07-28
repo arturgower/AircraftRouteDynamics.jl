@@ -18,3 +18,7 @@ then press the backspace key followed by
 ```julia
 julia> using AircraftRouteDynamics
 ```
+
+## Route simulation
+
+Here we give a simple example 

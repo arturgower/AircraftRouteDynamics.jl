@@ -30,7 +30,7 @@
 
 \title{Effective dynamics of an aircraft}
 
-\author{Art L. Gower, Matheus de Carvalho Loures, Paulo Piva}
+\author{Art L. Gower and Matheus de Carvalho Loures}
 
 \begin{document}
 \maketitle
@@ -260,7 +260,12 @@ Naturally, we can also minimise the flight time as well as achieve the destinati
 \]
 where $c_t$ is an appropriately chosen constant. To make the above robust, we should in fact non-dimensionalise each of the parts, and use a constant, such as $c_t$ to give the appropriate weighting. For example, in the code ... make the goal of minimising the total flight time 100 times less important than achieve the final destination.
 
+\subsection{Numerical examples}
+
+
 \section{Finding the right altitude to keep a certain speed above the tropopause}
+
+The dynamics model above does not include changes due to changes in altitude. These changes would affect drag for example. However, it is simple to add changes of altitude into the model, without consider the full three-dimensional trajectory of the aircraft. Below we give some relevant formulas, but did not have enough time to integrate them in the model above or the code.  
 
 The tropopause is the height that separates the troposphere and the stratosphere 
 

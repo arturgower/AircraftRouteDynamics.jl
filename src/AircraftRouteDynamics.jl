@@ -1,6 +1,7 @@
 using LinearAlgebra, Statistics
 using Optim
 using Accessors
+using RecipesBase
 
 include("types.jl")
 

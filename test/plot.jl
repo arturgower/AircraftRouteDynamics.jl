@@ -1,5 +1,3 @@
-using RecipesBase
-
 @recipe function plot(setup::RouteSetup, wind_speed::Function; 
         Nθ = 15, Nφ = 14,
         θmin = 0.98 * min(setup.θφ_start[1], setup.θφ_end[1]),

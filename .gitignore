@@ -10,6 +10,7 @@
 *.run.xml
 *.blg
 *.bbl
+*.bib
 *.fls
 *.fdb_latexmk
 *.synctex.gz

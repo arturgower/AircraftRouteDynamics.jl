@@ -1,5 +1,4 @@
 using Test
 
-include("../src/types.jl")
-include("../src/equations-motion.jl")
+include("../src/AircraftRouteDynamics")
 include("wind-tests.jl")

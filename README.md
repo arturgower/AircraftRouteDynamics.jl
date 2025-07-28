@@ -14,3 +14,7 @@ This package is currently not registered, so to install it you will need to type
 ```julia
 julia> ]
 pkg> add https://github.com/arturgower/AircraftRouteDynamics.jl
+then press the backspace key followed by
+```julia
+julia> using AircraftRouteDynamics
+```

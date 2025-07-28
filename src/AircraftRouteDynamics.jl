@@ -12,7 +12,7 @@ include("types.jl")
 # main forces 
 export thrust_force, perpendicular_force, drag_force_2D
 
-# calculate new route 
+# calculate new route
 export route, clip_route
 
 # functions for optimisation

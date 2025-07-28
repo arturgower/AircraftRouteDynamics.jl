@@ -8,12 +8,12 @@
 
     N = 1000;
     dt = 0.001;
-    height = 8.0;
-    θφ_start = [1.0,1.0];
-    v_vec_start = [1.0,0.0,0.0];
+    altitude = 8.0;
+    θφ_initial = [1.0,1.0];
+    initial_velocity = [1.0,0.0,0.0];
 
     aircraft = Aircraft(
-        height = height,
+        altitude = altitude,
         empty_weight = 4.0,
         drag_coefficient = 0.5
     )
@@ -21,29 +21,29 @@
     setup = RouteSetup(
         aircraft = aircraft,
         iterations = N, dt = dt, 
-        θφ_start = θφ_start, 
-        v_vec_start = v_vec_start,
+        θφ_initial = θφ_initial, 
+        initial_velocity = initial_velocity,
         tol = 1e-2,
     )
     
     # fuel use over time
-    fuels = LinRange(10,4,N);
+    fuel = LinRange(10,4,N);
 
     # turns over time
-    turns = 0.0 .* fuels
+    turns = 0.0 .* fuel
 
     # wind speed vector
     wind_v = [0.0,0.0]
     wind_speed(x,y) = wind_v
 
     # calculate route
-    r = route(setup, fuels, turns, wind_speed)
+    r = route(setup, fuel, turns, wind_speed)
 
     # The solution can be explicilty integrated if the aircraft does not change direciton.
     vs = LinRange(r.speeds[1], r.speeds[end],1000);
     dv = vs[2] - vs[1];
 
-    dmdt = (r.fuels[2] - r.fuels[1]) / setup.dt;
+    dmdt = (r.fuel[2] - r.fuel[1]) / setup.dt;
     CD = aircraft.drag_coefficient;
     CT = aircraft.fuel_efficiency_coefficient
     
@@ -56,7 +56,7 @@
     ts = LinRange(0, setup.iterations * setup.dt, 1000);
     dt = ts[2] - ts[1]
 
-    integrate_ms= - dt ./ (dmdt .* ts .+ fuels[1] .+ aircraft.empty_weight);
+    integrate_ms= - dt ./ (dmdt .* ts .+ fuel[1] .+ aircraft.empty_weight);
     integrate_ms[1] = integrate_ms[end] / 2
     integrate_ms[end] = integrate_ms[end] / 2
 
@@ -70,17 +70,17 @@
 
         
     # fuel use over time
-    fuels = LinRange(10,4,N);
+    fuel = LinRange(10,4,N);
 
     # turns over time
-    turns = 0.0 .* fuels .- 0.3
+    turns = 0.0 .* fuel .- 0.3
 
     # wind speed vector
     wind_v = [0.5,0.3]
     wind_speed(x,y) = wind_v
 
     # calculate route
-    r = route(setup, fuels, turns, wind_speed)
+    r = route(setup, fuel, turns, wind_speed)
 
     @test true 
 end

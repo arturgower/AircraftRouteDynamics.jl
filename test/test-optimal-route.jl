@@ -3,13 +3,13 @@ include("../src/AircraftRouteDynamics.jl")
 # Calculate an optimal route
     N = 120;
     dt = 0.02;
-    height = 8.0;
-    θφ_start = [1.0,1.0];
+    altitude = 8.0;
+    θφ_initial = [1.0,1.0];
     θφ_end = [1.5,1.8];
-    v_vec_start = [1.5,1.0,0.0];
+    initial_velocity = [1.5,1.0,0.0];
 
     aircraft = Aircraft(
-        height = height,
+        altitude = altitude,
         empty_weight = 6.0,
         drag_coefficient = 0.5,
         fuel_burn_rate = 6.0,
@@ -20,9 +20,9 @@ include("../src/AircraftRouteDynamics.jl")
     setup = RouteSetup(
         aircraft = aircraft,
         iterations = N, dt = dt, 
-        θφ_start = θφ_start, 
+        θφ_initial = θφ_initial, 
         θφ_end = θφ_end,
-        v_vec_start = v_vec_start,
+        initial_velocity = initial_velocity,
         tol = 1e-2,
     )
 
@@ -30,8 +30,8 @@ include("../src/AircraftRouteDynamics.jl")
     wind_speed(x,y) = wind_v
 
     function f(x, setup, wind_speed)
-        turns, fuels = x_to_control_variables(x,setup)
-        r = route(setup, fuels, turns, wind_speed)
+        turns, fuel = x_to_control_variables(x,setup)
+        r = route(setup, fuel, turns, wind_speed)
 
         return objective(r, setup)
     end
@@ -50,10 +50,10 @@ include("../src/AircraftRouteDynamics.jl")
     # res = optimize(x -> f(x,setup), initial_guess, LBFGS(), options)
     res.minimum
 
-    turns, fuels = x_to_control_variables(res.minimizer, setup) 
+    turns, fuel = x_to_control_variables(res.minimizer, setup) 
 
     # turns = 10 .* ones(N)
-    r = route(setup, fuels, turns, wind_speed)
+    r = route(setup, fuel, turns, wind_speed)
     r = clip_route(r, setup)
 
     # r = route(setup, ms, turns .* 0.0)
@@ -73,4 +73,4 @@ include("../src/AircraftRouteDynamics.jl")
     # savefig("constant-wind-optimal.pdf")
 
     # plot(turns)
-    # plot(diff(fuels) ./ dt) 
+    # plot(diff(fuel) ./ dt) 

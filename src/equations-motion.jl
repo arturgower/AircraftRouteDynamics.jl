@@ -70,7 +70,7 @@ end
 
 # const empty_wind = WindData([-10.0, 10.0],[-10.0, 10.0], [[[0.0,0.0]] [[0.0,0.0]]; [[0.0,0.0]] [[0.0,0.0]]]);
 
-function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0])
+function route(setup::RouteSetup, fuel, turns, wind_speed = (θ,φ) -> [0.0,0.0])
     aircraft = setup.aircraft
 
     N = setup.iterations
@@ -80,13 +80,13 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
     forces = [zeros(2) for i = 1:N];
     speeds = zeros(N);
 
-    θs[1] = setup.θφ_start[1]
-    φs[1] = setup.θφ_start[2]
+    θs[1] = setup.θφ_initial[1]
+    φs[1] = setup.θφ_initial[2]
 
     er = [0,0,1.0];
-    r = aircraft.height; # height of flight
+    r = aircraft.altitude; # altitude of flight
 
-    v_vec = setup.v_vec_start;
+    v_vec = setup.initial_velocity;
     
     speeds[1] = norm(v_vec);
 
@@ -96,13 +96,18 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
         basis_align_old = v_vec ./ norm(v_vec);
     end
 
+    if length(basis_align_old) == 2
+        basis_align_old = [basis_align_old; 0.0]
+    end
+
+
     basis_perp_old = cross(er, basis_align_old)
 
     dt = setup.dt;
     flight_time = dt * N;
 
     for i = 1:(N-1)
-        dmdt = (fuels[i+1] - fuels[i]) / dt
+        dmdt = (fuel[i+1] - fuel[i]) / dt
 
         # external forces
         U = wind_speed(θs[i], φs[i]);
@@ -114,26 +119,26 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
         forces[i] = drag;
         
         # update speed
-        mass = fuels[i] + aircraft.empty_weight;
+        mass = fuel[i] + aircraft.empty_weight;
         speed = speed_new(speeds[i], mass, dmdt, dt,external_force_align)
 
         # update local coordinates
         basis_perp = basis_perp_new(basis_perp_old, basis_align_old, U, speeds[i], turns[i], mass, dt, external_force_perp)
         basis_align = cross(basis_perp,er)
 
-        θφ = θφ_new([θs[i],φs[i]], speed .* basis_align, dt, aircraft.height)
+        θφ = θφ_new([θs[i],φs[i]], speed .* basis_align, dt, aircraft.altitude)
 
         θs[i+1] = θφ[1];
         φs[i+1] = θφ[2];
         speeds[i+1] = speed
 
-        if norm(θφ - setup.θφ_end) < setup.tol || fuels[i] < 0
+        if norm(θφ - setup.θφ_end) < setup.tol || fuel[i] < 0
             θs = θs[1:1+i]
             φs = φs[1:1+i]
             turns = turns[1:i+1]
             speeds = speeds[1:i+1]
             forces = forces[1:i+1]
-            fuels = fuels[1:i+1]
+            fuel = fuel[1:i+1]
             flight_time = dt * (i+1)
 
             break
@@ -143,7 +148,7 @@ function route(setup::RouteSetup, fuels, turns, wind_speed = (θ,φ) -> [0.0,0.0
         basis_perp_old = basis_perp;
     end
 
-    return Route(flight_time = flight_time, turns = turns, fuels = fuels, θs = θs, φs = φs, forces = forces, speeds = speeds)
+    return Route(flight_time = flight_time, turns = turns, fuel = fuel, θs = θs, φs = φs, forces = forces, speeds = speeds)
 end
 
 function clip_route(r::Route, setup::RouteSetup)
@@ -169,7 +174,7 @@ function objective(r::Route, setup::RouteSetup)
 
     r = clip_route(r, setup);
 
-    θ1 = setup.θφ_start[1]; φ1 = setup.θφ_start[2];
+    θ1 = setup.θφ_initial[1]; φ1 = setup.θφ_initial[2];
     θ2 = setup.θφ_end[1]; φ2 = setup.θφ_end[2];
 
     δ = 1e-7
@@ -186,7 +191,7 @@ function objective(r::Route, setup::RouteSetup)
 
     # Aim to minimize flight time.
     # distance along great circle
-    D = aircraft.height * acos(sin(φ1)*sin(φ2) + cos(φ1)*cos(φ2)*cos(θ1 - θ2))
+    D = aircraft.altitude * acos(sin(φ1)*sin(φ2) + cos(φ1)*cos(φ2)*cos(θ1 - θ2))
     T = D / aircraft.typical_speed
 
     obj = obj + 1e-2 * r.flight_time / T
@@ -206,7 +211,7 @@ function objective_fuel(r::Route, setup::RouteSetup)
 
     r = clip_route(r, setup);
 
-    θ1 = setup.θφ_start[1]; φ1 = setup.θφ_start[2];
+    θ1 = setup.θφ_initial[1]; φ1 = setup.θφ_initial[2];
     θ2 = setup.θφ_end[1]; φ2 = setup.θφ_end[2];
 
     δ = 1e-5
@@ -223,7 +228,7 @@ function objective_fuel(r::Route, setup::RouteSetup)
 
     # Aim use of fuel
     
-    obj = obj - 1e-2 * r.fuels[end] / aircraft.empty_weight;
+    obj = obj - 1e-2 * r.fuel[end] / aircraft.empty_weight;
 
     # Aim to minimize fuel use
     # obj = obj - 1e-1 * r.fuel[end]
@@ -242,16 +247,16 @@ function x_to_control_variables(x, setup::RouteSetup)
     turns = stretch_vector(x[1:i], setup.iterations)
     burn_rates = abs.(stretch_vector(x[i+1:end], setup.iterations))
 
-    max_burn_rate = setup.aircraft.fuel_burn_rate * 1.4;
-    min_burn_rate = setup.aircraft.fuel_burn_rate * 0.4;
+    max_burn_rate = setup.aircraft.fuel_burn_rate * 2.0;
+    # min_burn_rate = setup.aircraft.fuel_burn_rate * 0.4;
 
     is = findall(burn_rates .> max_burn_rate)
     burn_rates[is] .= max_burn_rate
 
-    is = findall(burn_rates .< min_burn_rate)
-    burn_rates[is] .= min_burn_rate
+    # is = findall(burn_rates .< min_burn_rate)
+    # burn_rates[is] .= min_burn_rate
 
-    fuels = setup.aircraft.fuel .- cumsum(burn_rates) * setup.dt
+    fuel = setup.aircraft.fuel .- cumsum(burn_rates) * setup.dt
     
-    return turns, fuels
+    return turns, fuel
 end

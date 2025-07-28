@@ -4,14 +4,14 @@ include("equations-motion.jl")
 
     N = 50;
     dt = 0.02;
-    height = 8.0;
+    altitude = 8.0;
     θφ_end = [1.5,1.8];
-    θφ_start = [1.0,1.0];
-    v_vec_start = [0.0,0.0,0.0];
-    # v_vec_start = [0.00006,0.0,0.0];
+    θφ_initial = [1.0,1.0];
+    initial_velocity = [0.0,0.0,0.0];
+    # initial_velocity = [0.00006,0.0,0.0];
 
     aircraft = Aircraft(
-        height = height,
+        altitude = altitude,
         empty_weight = 4.0,
         drag_coefficient = 0.5,
         fuel_burn_rate = 6.0
@@ -20,9 +20,9 @@ include("equations-motion.jl")
     setup = RouteSetup(
         aircraft = aircraft,
         iterations = N, dt = dt, 
-        θφ_start = θφ_start, 
+        θφ_initial = θφ_initial, 
         θφ_end = θφ_end,
-        v_vec_start = v_vec_start,
+        initial_velocity = initial_velocity,
         tol = 1e-2,
     )
     
@@ -48,7 +48,7 @@ include("equations-motion.jl")
 
     wind_plot(setup,wind_speed_plot)
     scatter!(r.θs,r.φs, label = "route")
-    scatter!(setup.θφ_start[1:1], setup.θφ_start[2:2], label = "Start destination")
+    scatter!(setup.θφ_initial[1:1], setup.θφ_initial[2:2], label = "Start destination")
 
 
 

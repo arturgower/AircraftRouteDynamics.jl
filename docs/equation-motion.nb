@@ -74,7 +74,7 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{
     "Assuming", " ", "the", " ", "flight", " ", "does", " ", "not", " ", 
-     "change", " ", "height"}], ",", " ", 
+     "change", " ", "altitude"}], ",", " ", 
     RowBox[{
      RowBox[{"let", "'"}], "s", " ", "work", " ", "out", " ", "some", " ", 
      "identites", " ", "for", " ", "vp", " ", "and", " ", "vh"}], ",", " ", 

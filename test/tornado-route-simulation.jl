@@ -10,18 +10,18 @@ wind_speed(x, y) = tornado_wind(x, y)
 
     N = 100;
     dt = 0.03;
-    height = 8.0;
-    θφ_start = [1.0,1.0];
+    altitude = 8.0;
+    θφ_initial = [1.0,1.0];
     θφ_end = [2.0,2.0];
-    v_vec_start = [3.6,3.0,0.0];
-    v_vec_start = [3.6,-3.0,0.0];
-    v_vec_start = [7.0,5.0,0.0];
+    initial_velocity = [3.6,3.0,0.0];
+    initial_velocity = [3.6,-3.0,0.0];
+    initial_velocity = [7.0,5.0,0.0];
     
-    norm(v_vec_start)
-    # v_vec_start = [0.00006,0.0,0.0];
+    norm(initial_velocity)
+    # initial_velocity = [0.00006,0.0,0.0];
 
     aircraft = Aircraft(
-        height = height,
+        altitude = altitude,
         empty_weight = 4.0,
         drag_coefficient = 2.0,
         fuel_burn_rate = 12.0,
@@ -32,9 +32,9 @@ wind_speed(x, y) = tornado_wind(x, y)
     setup = RouteSetup(
         aircraft = aircraft,
         iterations = N, dt = dt,
-        θφ_start = θφ_start,
+        θφ_initial = θφ_initial,
         θφ_end = θφ_end,
-        v_vec_start = v_vec_start,
+        initial_velocity = initial_velocity,
         tol = 1e-2,
     )
 
@@ -54,7 +54,7 @@ wind_speed(x, y) = tornado_wind(x, y)
     # wind_speed(x, y) = 0.01 .* wind_speed_interpol_2D(x, y, wind_data)
     wind_speed_plot(x, y) = 0.01 .* wind_speed(x, y)
 
-    wind_plot(setup,wind_speed_plot)
+    plot(setup,wind_speed_plot)
 
     scatter!(r.θs,r.φs, label = "route")
-    scatter!(setup.θφ_start[1:1], setup.θφ_start[2:2], label = "Start destination")
+    scatter!(setup.θφ_initial[1:1], setup.θφ_initial[2:2], label = "Start destination")

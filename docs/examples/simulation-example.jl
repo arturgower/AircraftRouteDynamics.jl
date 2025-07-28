@@ -4,16 +4,16 @@ include("../../src/AircraftRouteDynamics.jl")
 
     N = 45;
     dt = 0.02;
-    height = 8.0;
+    altitude = 8.0;
     θφ_end = [1.5,1.8];
-    θφ_start = [1.0,1.0];
+    θφ_initial = [1.0,1.0];
 
     # initial velocity in θ and φ direction
-    v_vec_start = [0.2,0.0,0.0];
-    # v_vec_start = [0.00006,0.0,0.0];
+    initial_velocity = [0.2,0.0,0.0];
+    # initial_velocity = [0.00006,0.0,0.0];
 
     aircraft = Aircraft(
-        height = height,
+        altitude = altitude,
         empty_weight = 4.0,
         drag_coefficient = 0.5,
     )
@@ -21,15 +21,15 @@ include("../../src/AircraftRouteDynamics.jl")
     setup = RouteSetup(
         aircraft = aircraft,
         iterations = N, dt = dt, 
-        θφ_start = θφ_start, 
+        θφ_initial = θφ_initial, 
         θφ_end = θφ_end,
-        v_vec_start = v_vec_start,
+        initial_velocity = initial_velocity,
         tol = 1e-2,
     )
     
 
      # fuel use over time
-    fuels = LinRange(10,4,N);
+    fuel = LinRange(10,4,N);
 
     # wind speed vector in θ and φ direction
     wind_v = [1.0,1.0]
@@ -46,10 +46,10 @@ include("../../src/AircraftRouteDynamics.jl")
 
     map(0:2) do i 
         # turns over time
-        turns = 0.0 .* fuels .- i * 2
+        turns = 0.0 .* fuel .- i * 2
 
         # calculate route
-        r = route(setup, fuels, turns, wind_speed)
+        r = route(setup, fuel, turns, wind_speed)
         scatter!(r.θs,r.φs, label = "route turn - $(i)") 
     end
     scatter!(xlab = "θ", ylab = "φ") 
@@ -57,10 +57,10 @@ include("../../src/AircraftRouteDynamics.jl")
 
     N = 65
      # fuel use over time
-    fuels = LinRange(10,4,N);
+    fuel = LinRange(10,4,N);
 
     aircraft = Aircraft(
-        height = height,
+        altitude = altitude,
         empty_weight = 4.0,
         drag_coefficient = 3.3,
     )
@@ -68,9 +68,9 @@ include("../../src/AircraftRouteDynamics.jl")
     setup = RouteSetup(
         aircraft = aircraft,
         iterations = N, dt = dt, 
-        θφ_start = θφ_start, 
+        θφ_initial = θφ_initial, 
         θφ_end = θφ_end,
-        v_vec_start = v_vec_start,
+        initial_velocity = initial_velocity,
         tol = 1e-2,
     )
 
@@ -78,10 +78,10 @@ include("../../src/AircraftRouteDynamics.jl")
     plot()
     map(0:2) do i 
         # turns over time
-        turns = 0.0 .* fuels .- i * 2
+        turns = 0.0 .* fuel .- i * 2
 
         # calculate route
-        r = route(setup, fuels, turns, wind_speed)
+        r = route(setup, fuel, turns, wind_speed)
         scatter!(r.θs,r.φs, label = "route turn - $(i)") 
     end
     scatter!(xlab = "θ", ylab = "φ") 

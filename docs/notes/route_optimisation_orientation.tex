@@ -177,7 +177,7 @@ Then the velocity vector of the aircraft is given by $\dot{\vec x} = \vec v$, wi
 \[
 \vec v = r \sin \phi  {\vec e_\theta} \dot \theta + r  {\vec e_\phi} \dot \phi, 
 \]
-by assuming that the height $r$ is fixed. Then, from the above we deduce that
+by assuming that the altitude $r$ is fixed. Then, from the above we deduce that
 \begin{equation} \label{eqn:update_thetaphi}
     r \sin \phi \dot \theta = \vec v \cdot {\vec e}_\theta  \quad \text{and} \quad 
 r \dot \phi = \vec v \cdot {\vec e}_\phi.
@@ -252,10 +252,10 @@ where using the coordinate system $(\theta,\phi,r)$ we always have that $\vec e_
 
 \section{Finding the right altitude to keep a certain speed above the tropopause}
 
-The tropopause is the height that separates the troposphere and the stratosphere 
+The tropopause is the altitude that separates the troposphere and the stratosphere 
 
 The force balance in normal direction gives equilibrium of the plane at a constant altitude $H$. 
-The air density at a certain height can be approximated as
+The air density at a certain altitude can be approximated as
 
 \begin{equation}
     \rho= \rho_{\text{trop}}e^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)},
@@ -324,7 +324,7 @@ Isolating $H$ and substituting $u$ we have that
 
 \section{Finding the right altitude to keep a certain speed below the tropopause}
 
-The air density at a certain height can be approximated as
+The air density at a certain altitude can be approximated as
 
 \begin{equation}
     \rho= \rho_0 \left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1}
@@ -348,7 +348,7 @@ where $A$ is the projected area of the whole plane.
     -m(t)\frac{v(t)^2}{r}=-mg+ L_u
 \end{equation}
 
-were we dropped the pressure term just to have an estimate height
+were we dropped the pressure term just to have an estimate altitude
 
 \begin{equation}
   \Rightarrow \frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\frac{\beta C_L}{2} \rho_0 u^2S}=  \left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1}    

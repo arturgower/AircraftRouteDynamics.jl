@@ -5,7 +5,7 @@
 [ci-img]: https://github.com/arturgower/AircraftRouteDynamics.jl/actions/workflows/ci.yml/badge.svg
 [ci-url]: https://github.com/arturgower/AircraftRouteDynamics.jl/actions/workflows/ci.yml
 
-*A Julia library for simulating and calculating optimal routes for commercial aircrafts. 
+A Julia library for simulating and calculating optimal routes for commercial aircrafts. 
 
 The package uses some simplified dynamics to capture the main contributions to drag, wind, and thrust. Routes can be chosen to minimise fuel or flight time.
 
@@ -183,3 +183,19 @@ scatter!(r.θs[1:7:end], r.φs[1:7:end], markersize = 3.0, lab = "fast flight")
 ![Compare fastest route and fuel efficient.](docs/imgs/readme-5.png)
 
 We can see that the fuel efficient flight took a longer route that better used the wind.
+
+## Reference 
+
+To cite this work first choose a version (ex: v0.0.1) then please use:
+
+"AircraftRouteDynamics.jl" v0.0.1. Github. (2025): github.com/arturgower/AircraftRouteDynamics.jl
+
+or for bibtex:
+
+@software{gower2025AircraftRouteDynamics,
+  title={AircraftRouteDynamics.jl},
+  author={Gower, Artur L},
+  version={v0.0.1},
+  url={github.com/arturgower/AircraftRouteDynamics.jl},
+  year={2025}
+}

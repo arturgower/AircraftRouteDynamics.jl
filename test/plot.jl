@@ -35,6 +35,8 @@ end
     end
 
     markersize --> 4
+    xlab --> "θ - longitude"
+    ylab --> "φ - latitude"
 
     @series begin
         label := "Start"

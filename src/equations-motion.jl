@@ -228,7 +228,7 @@ function objective_fuel(r::Route, setup::RouteSetup)
 
     # Aim use of fuel
     
-    obj = obj - 1e-2 * r.fuel[end] / aircraft.empty_weight;
+    obj = obj - 6e-3 * r.fuel[end] / aircraft.empty_weight;
 
     # Aim to minimize fuel use
     # obj = obj - 1e-1 * r.fuel[end]

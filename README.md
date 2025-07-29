@@ -63,6 +63,8 @@ Finally, we specify use of fuel, how much the pilot tries to turn `turns`, and w
     # calculate route
     r = route(setup, fuel, turns, wind_speed)
 ```
+Note on a normal PC the above simulation takes around 100 microseconds. 
+
 If you have `Plots.jl` installed you can then easily plot the wind and route with
 ```julia
 using Plots
@@ -123,15 +125,15 @@ initial_guess = [zeros(i); ones(i)]
 
 res = optimize(x -> f(x,setup,wind_speed), initial_guess, options)
 
-res.minimum
-
+# extract the turns and fuel from the optimal x given.
 turns, fuel = x_to_control_variables(res.minimizer, setup) 
 
+# calculate the route that was achieve for the given turns and fuel
 r = route(setup, fuel, turns, wind_speed)
 r = clip_route(r, setup)
 
 scatter(setup.θφ_end[1:1], setup.θφ_end[2:2], 
-    markersize = 5.0,
+    markersize = 6.0, m = :xcross,
     lab = "target destination"
 )
 plot!(r,wind_speed; wind_amplitude = 5e-3, step_size = 7)
@@ -141,7 +143,7 @@ plot!(r,wind_speed; wind_amplitude = 5e-3, step_size = 7)
 
 We can now explore the fuel use and turns 
 ```julia
-plot(r.fuel, xlab = "time steps", ylab = "fuel use")
+plot(r.fuel, xlab = "time steps", ylab = "fuel use", ylims = (0, :auto))
 # savefig("docs/imgs/readme-3.png")
 plot(r.turns, xlab = "time steps", ylab = "turns")
 # savefig("docs/imgs/readme-4.png")
@@ -171,16 +173,26 @@ r_fuel = route(setup, fuel, turns, wind_speed)
 r_fuel = clip_route(r_fuel, setup)
 
 scatter(setup.θφ_end[1:1], setup.θφ_end[2:2], 
-    markersize = 5.0,
+    markersize = 6.0, m = :xcross,
     lab = "target destination"
 )
 plot!(r_fuel,wind_speed; wind_amplitude = 5e-3, step_size = 7, lab = "fuel efficient")
 
 # let's overlay the minimum time flight
-scatter!(r.θs[1:7:end], r.φs[1:7:end], markersize = 3.0, lab = "fast flight")
+scatter!(r.θs[1:5:end], r.φs[1:5:end], markersize = 3.0, lab = "fast flight")
 # savefig("docs/imgs/readme-5.png")
+
+# gr(size = (360,280))
+plot(r_fuel.fuel, lab = "fuel efficient")
+plot!(r.fuel, lab = "fastest", 
+    xlab = "time steps", 
+    ylab ="fuel"
+)
+# savefig("docs/imgs/readme-6.png")
+
 ```
 ![Compare fastest route and fuel efficient.](docs/imgs/readme-5.png)
+![Compare fastest route and fuel efficient.](docs/imgs/readme-6.png)
 
 We can see that the fuel efficient flight took a longer route that better used the wind.
 

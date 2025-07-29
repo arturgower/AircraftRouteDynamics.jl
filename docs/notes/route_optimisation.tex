@@ -258,10 +258,35 @@ Naturally, we can also minimise the flight time as well as achieve the destinati
 \[
 \min_{\vec \alpha, \dot{\vec m}} c_t | t_B - t_A| + | \vec x(t_B) - \vec x_B|, \quad \text{(minimise flight time)}
 \]
-where $c_t$ is an appropriately chosen constant. To make the above robust, we should in fact non-dimensionalise each of the parts, and use a constant, such as $c_t$ to give the appropriate weighting. For example, in the code ... make the goal of minimising the total flight time 100 times less important than achieve the final destination.
+where $c_t$ is an appropriately chosen constant. To make the above robust, we should in fact non-dimensionalise each of the parts, and use a constant, such as $c_t$ to give the appropriate weighting. For example, \href{https://github.com/arturgower/AircraftRouteDynamics.jl/blob/354db5b80cef8d20cd8fcf031ec3f446823477eb/src/equations-motion.jl#L168}{in the code} the goal of minimising the total flight time 100 times less important than achieve the final destination.
 
-\subsection{Numerical examples}
+\subsection{Code and Numerical examples}
+Here we give a brief description of the code \cite{gower2025AircraftRouteDynamics} and examples. The code used to generate the examples in this report is from \href{https://github.com/arturgower/AircraftRouteDynamics.jl/tree/v0.0.1}{AircraftRouteDynamics v0.0.1}. Note the most recent version is here: \href{https://github.com/arturgower/AircraftRouteDynamics.jl/tree/main}{AircraftRouteDynamics.jl}, which may work differently then what is described below.
 
+In the code AircraftRouteDynamics.jl a range of parameters of the aircraft and route can be given as shown in \Cref{fig:configure-aircraft}, as well as running a simulation. A more detail description of the parameters and setting up a simulation are given in the \href{https://github.com/arturgower/AircraftRouteDynamics.jl/blob/v0.0.1/README.md}{landing page}. Note the simulation result shown in \Cref{fig:one-route}, which uses a more elaborate wind pattern which imitates a tornado, took 280 microseconds on a regular PC.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width = 0.47\linewidth]{../imgs/configure-aircraft.png}
+    \includegraphics[width = 0.37\linewidth]{../imgs/run-aircraft.png}
+    \caption{An example of how to figure the package \href{https://github.com/arturgower/AircraftRouteDynamics.jl/tree/main}{AircraftRouteDynamics.jl} to run a simulation of one route. The parameters above are not realistic for a commercial aircraft.}
+    \label{fig:configure-aircraft}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width = 0.6\linewidth]{../imgs/readme-1.png}
+    \caption{Example of the simulation of one route, with the start and end point highlighted. Note that the end point does not match the one given in the parameters shown in \Cref{fig:configure-aircraft}. To achieve a specific end point you have to find an optimal route as specified below.}
+    \label{fig:one-route}
+\end{figure}
+
+Finally, the package can find optimal routes
+
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.49\linewidth]{../imgs/readme-4.png}
+    \includegraphics[width = 0.49\linewidth]{../imgs/readme-5.png}
+\end{figure}
 
 \section{Finding the right altitude to keep a certain speed above the tropopause}
 

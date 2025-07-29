@@ -100,6 +100,8 @@ setup = RouteSetup(
 ```
 Note it is quite easy to give an end destination which is impossible for the amount of fuel given and wind speeds. The `fuel_burn_rate` is used to calculate the maximum (`2.0 * fuel_burn_rate`) fuel burn rate.
 
+The code to optimise the route has not been integrated into the package. Instead, we rely on the package `Optim` to find optimal routes.
+
 ```julia
 using Optim 
 

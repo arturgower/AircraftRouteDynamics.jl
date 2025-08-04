@@ -296,7 +296,7 @@ The dynamics model above does not include changes due to changes in altitude. Th
 The lift force is calculated as  \cite{nuic2004bada} 
 
 \begin{equation}
-    L_r= \frac{\beta }{2} \rho |\vec{v}-\vec{u}|^2S
+    L_r= \frac{\beta }{2} \rho |(\vec{v}-\vec{u})\cdot \vec e_v|^2S
 \end{equation}
 Where $|\vec{v}-\vec{u}|$ is the speed of the plane related to the wind, $\rho$ is the air density, m is the mass of the plane, g is gravity , S is the area of the wing  projected at the plane normal to $\vec{e}_r$, and $\beta$ is the lift control parameter. From that we can see that the lift force is proportional to the air density. However the air density varies with the altitude of the aircraft. This dependece also can be approximatted by different formulas depending on the Altitude. For Heights above the tropopause  \cite{nuic2004bada} which is the altitude that separates the troposphere from the stratosphere ($\approx 11000$m) the density varies as
 
@@ -321,11 +321,11 @@ where $A$ is the projected area of the whole plane. Then the equation of motion 
 \end{equation}
 
 \begin{equation}
-     -m(t)\frac{v(t)^2}{r}=-mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |\vec{v}-\vec{u}|^2S
+     -m(t)\frac{v(t)^2}{r}=-mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |(\vec{v}-\vec{u})\cdot \vec e_v|^2S
    \end{equation}
 notice that $r=R_{\text{earth}}+H$ where $R_{\text{earth}}\approx 6378\text{km}$. Then the assumption that $R_{\text{earth}}>> H$ is reasonable to do, so we approximate $r\approx R_{\text{earth}}$ on the above 
 \begin{equation}
-    -m\frac{v^2}{R_{\text{earth}}}= -mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |\vec{v}-\vec{u}|^2S
+    -m\frac{v^2}{R_{\text{earth}}}= -mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |(\vec{v}-\vec{u})\cdot \vec e_v|^2S
 \end{equation}
 Isolating $H$  we have that
 %\begin{equation}
@@ -340,11 +340,11 @@ Isolating $H$  we have that
 %\end{equation}
 
 \begin{equation}
-    H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |\vec{v}-\vec{u}|^2S\right)}\right)+h_{\text{trop}},
+    H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |(\vec{v}-\vec{u})\cdot \vec e_v|^2S\right)}\right)+h_{\text{trop}},
 \end{equation}
 or isolating $\beta$ that
 \begin{equation}
-\beta=    \frac{2}{\rho_{\text{trop}}|\vec{v}-\vec{u}|^2S} \left( \mathrm{e}^{\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} \left( -\frac{m v^2}{R_{\text{earth}}}+mg\right) + P_{\text{trop}}A  \right)
+\beta=    \frac{2}{\rho_{\text{trop}}|(\vec{v}-\vec{u})\cdot \vec e_v|^2S} \left( \mathrm{e}^{\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} \left( -\frac{m v^2}{R_{\text{earth}}}+mg\right) + P_{\text{trop}}A  \right)
 \end{equation}
 Depending on which parameter we wish to control. 
 
@@ -371,11 +371,11 @@ where $A$ is again the projected area of the whole plane.
 
 where again we can use the approximation
 \begin{equation}
-  \Rightarrow  -m\frac{v^2}{R_{\text{earth}}}= -mg- P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A +\frac{\beta }{2}\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |\vec{v}-\vec{u}|^2S
+  \Rightarrow  -m\frac{v^2}{R_{\text{earth}}}= -mg- P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A +\frac{\beta }{2}\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |(\vec{v}-\vec{u})\cdot \vec e_v|^2S
 \end{equation}
 
 \begin{equation}
-\beta= \frac{2}{\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |\vec{v}-\vec{u}|^2S} \left(-m\frac{v^2}{R_{\text{earth}}} + mg+ P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A \right)
+\beta= \frac{2}{\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |(\vec{v}-\vec{u})\cdot \vec e_v|^2S} \left(-m\frac{v^2}{R_{\text{earth}}} + mg+ P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A \right)
 \end{equation}
 
 With that we can obtain the value of the lift coefficient to keep the plane at a certain H below the tropopause.

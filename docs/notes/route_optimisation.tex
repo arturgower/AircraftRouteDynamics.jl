@@ -147,13 +147,13 @@ The above then implies that $a_v =0$, $a_p =0$, and $a_r =0$, which written in f
 % \end{equation}
 % then we isolate the terms in each direction, getting three differential equations
 \begin{align} \label{eqn:thrust-momentum}
-    &  \dot{m} v + m \dot v = w_r + T(\dot{m},v),
+    &  \dot{m} v + m \dot v = w_v + T(\dot{m}),
     \\
     \label{eqn:turn-momentum}
-    &  m(t) v(t)({\vec{e}}_p \cdot \dot{\vec{e}}_v) = w_p(r,v,t) + L_c(\alpha(t),v(t)),
+    &  m(t) v(t)({\vec{e}}_p \cdot \dot{\vec{e}}_v) = w_p + L_p(\vec{v}-\vec{u},\alpha),
     \\
     \label{eqn:lift-momentum}
-    & m(t) v(t)({\vec{e}_r}(t) \cdot \dot{\vec{e}}_v)=w_r(r,v,t)+L_u(\beta(t),v(t)).
+    & m(t) v(t)({\vec{e}_r}(t) \cdot \dot{\vec{e}}_v)=w_r +L_r(\vec{v}-\vec{u},\beta).
 \end{align}
 
 \subsection{Forward marching numerical method}
@@ -197,7 +197,7 @@ and then solving for ${v}(t+h)$. From the second equation \eqref{eqn:turn-moment
 \]
 because $\dot {\vec e}_v$ is orthogonal to ${\vec e}_v$. Substituting the above into \eqref{eqn:turn-momentum} then leads to
 \begin{equation}
- a =  {\vec{e}}_p \cdot \dot{\vec{e}}_v =  (w_p(r,v,t) + L_c(\alpha(t),v(t) ) / (m(t) v(t)).
+ a =  {\vec{e}}_p \cdot \dot{\vec{e}}_v =  (w_p(r,v,t) + L_p(\alpha(t),v(t) ) / (m(t) v(t)).
 \end{equation}
 To obtain $b$ we use 
 \begin{equation}
@@ -287,113 +287,98 @@ Finally, the package can find optimal routes
     \includegraphics[width = 0.49\linewidth]{../imgs/readme-4.png}
     \includegraphics[width = 0.49\linewidth]{../imgs/readme-5.png}
 \end{figure}
+\section{Calculating the Lift coefficient to keep the aircraft at a certain Height}
 
-\section{Finding the right altitude to keep a certain speed above the tropopause}
+\subsection{Lift coefficient above the tropopause}
 
 The dynamics model above does not include changes due to changes in altitude. These changes would affect drag for example. However, it is simple to add changes of altitude into the model, without consider the full three-dimensional trajectory of the aircraft. Below we give some relevant formulas, but did not have enough time to integrate them in the model above or the code.  
 
-The tropopause is the altitude that separates the troposphere and the stratosphere 
-
-The force balance in normal direction gives equilibrium of the plane at a constant altitude $H$. 
-The air density at a certain altitude can be approximated as
+The lift force is calculated as  \cite{nuic2004bada} 
 
 \begin{equation}
-    \rho= \rho_{\text{trop}}e^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)},
+    L_r= \frac{\beta }{2} \rho |\vec{v}-\vec{u}|^2S
 \end{equation}
-where the sub-index 'trop' means the tropopause value of the density,temperature, and altitude provided in the NATS guide. The pressure also follows the same behaviour.
+Where $|\vec{v}-\vec{u}|$ is the speed of the plane related to the wind, $\rho$ is the air density, m is the mass of the plane, g is gravity , S is the area of the wing  projected at the plane normal to $\vec{e}_r$, and $\beta$ is the lift control parameter. From that we can see that the lift force is proportional to the air density. However the air density varies with the altitude of the aircraft. This dependece also can be approximatted by different formulas depending on the Altitude. For Heights above the tropopause  \cite{nuic2004bada} which is the altitude that separates the troposphere from the stratosphere ($\approx 11000$m) the density varies as
 
 \begin{equation}
-    P= P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}
+    \rho= \rho_{\text{trop}}e^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)},
 \end{equation}
-The lift force is calculated as
+where, $R$ is the gas constant  and the sub-index 'trop' means the tropopause value of the density,temperature, and altitude provided in \cite{nuic2004bada}. The pressure also follows the same behaviour.
 
 \begin{equation}
-    L_u= \frac{\beta C_L}{2} \rho u^2S
+    P= P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}.
 \end{equation}
-Where $u=|\vec{v}-\vec{W}|$ is the speed of the plane related to the wind, m is the mass of the plane, g is gravity , S is the area of the wing  projected at the plane normal to $\vec{e}_r$, and $C_L$ is the lift coefficient with $\beta$ being its control parameter. From that we can see that the lift force is proportional to the density.  So the Lift force is 
+ 
+
+The force balance in $\vec{e}_r$ direction gives equilibrium of the plane at a constant altitude $H$. This allow us to determine the lift control variable $\beta$ if we wish to keep a constant altitude $H$. So the total external force on the direction $\vec{e}_r$ is 
 
 \begin{equation}
-    L_u= \frac{\beta C_L}{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} u^2S
+    w_r=-mg -PA ,
 \end{equation}
-
-So the total external force on the direction $\vec{e}_r$ is 
-
+where $A$ is the projected area of the whole plane. Then the equation of motion in the $\vec{e}_r$ direction become
 \begin{equation}
-    w_r=-mg -PA 
-\end{equation}
-
-where $A$ is the projected area of the whole plane.
-
-\begin{equation}
-    -m(t)\frac{v(t)^2}{r}=-mg- PA +L_u
+    -m\frac{v^2}{r}=-mg- PA +L_r
 \end{equation}
 
 \begin{equation}
-     -m(t)\frac{v(t)^2}{r}=-mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}A +\frac{\beta C_L}{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} u^2S
+     -m(t)\frac{v(t)^2}{r}=-mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |\vec{v}-\vec{u}|^2S
    \end{equation}
+notice that $r=R_{\text{earth}}+H$ where $R_{\text{earth}}\approx 6378\text{km}$. Then the assumption that $R_{\text{earth}}>> H$ is reasonable to do, so we approximate $r\approx R_{\text{earth}}$ on the above 
+\begin{equation}
+    -m\frac{v^2}{R_{\text{earth}}}= -mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |\vec{v}-\vec{u}|^2S
+\end{equation}
+Isolating $H$  we have that
+%\begin{equation}
+%\Rightarrow     -m\frac{v^2}{R_{\text{earth}}} +mg= \left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |\vec{v}-\vec{u}|^2S\right) \mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}
+%\end{equation}
 
-notice that $r=R_{\text{earth}}+H$ and $R_{\text{earth}}>> H$, so we approximate $r\approx R_{\text{earth}}$
-\begin{equation}
-    -m\frac{v^2}{R_{\text{earth}}}= -mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}A +\frac{\beta C_L}{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} u^2S
-\end{equation}
-
-\begin{equation}
-\Rightarrow     -m\frac{v^2}{R_{\text{earth}}} +mg= \left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} u^2S\right) \mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}
-\end{equation}
-
-\begin{equation}
-  \Rightarrow \frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} u^2S\right)}=  \mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop})} \right)}    
-\end{equation}
-\begin{equation}
-  \Rightarrow \log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} u^2S\right)}\right)=  -\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)    
-\end{equation}
-
-Isolating $H$ and substituting $u$ we have that
-\begin{equation}
-    H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta C_L}{2} \rho_{\text{trop}} |\vec v-\vec W|^2S\right)}\right)+h_{trop}
-\end{equation}
-
- But $C_L$ in literature is given by
-\begin{equation}
-    C_L= \frac{2mg}{\rho_{\text{trop}} |\vec v-\vec W|^2S}
-\end{equation}
+%\begin{equation}
+ % \Rightarrow \frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |\vec{v}-\vec{u}|^2S\right)}=  \mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}    
+%\end{equation}
+%\begin{equation}
+ % \Rightarrow \log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |\vec{v}-\vec{u}|^2S\right)}\right)=  -\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)    
+%\end{equation}
 
 \begin{equation}
-    \Rightarrow H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{-  P_{\text{trop}}A +\beta mg }\right)+h_{trop}
+    H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |\vec{v}-\vec{u}|^2S\right)}\right)+h_{\text{trop}},
 \end{equation}
+or isolating $\beta$ that
+\begin{equation}
+\beta=    \frac{2}{\rho_{\text{trop}}|\vec{v}-\vec{u}|^2S} \left( \mathrm{e}^{\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} \left( -\frac{m v^2}{R_{\text{earth}}}+mg\right) + P_{\text{trop}}A  \right)
+\end{equation}
+Depending on which parameter we wish to control. 
 
-\section{Finding the right altitude to keep a certain speed below the tropopause}
+An important point to remember is that when the plane banks, a component of the lift contributes to the turn. However, this effect is not accounted for in our model due to a lack of available information.
 
-The air density at a certain altitude can be approximated as
+\subsection{Lift coefficient below below the tropopause}
+
+Another formula can be used to approximate density and pressure below the tropopause as explained in the previous section. The air density at a certain altitude can be approximated as \cite{nuic2004bada}
 
 \begin{equation}
-    \rho= \rho_0 \left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1}
-\end{equation}
-
-and the pressure is 
-
-\begin{equation}
-    P=P_0\left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}
-\end{equation}
-
-So the total external force on the direction $\vec{e}_r$ is 
-
+    \rho= \rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} \quad \text{and} \quad P=P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}},
+\end{equation} 
+where $P_0$, $\rho_0$ and $T_0$ are the values of pressure, temperature and densities of the atmosphere at the sea level. Also $k_T$ is the boltzman constant and R is the real gas constant.
+So as in the previous section, the total external force on the direction $\vec{e}_r$ is 
 \begin{equation}
     w_r=-mg -PA 
 \end{equation}
 
-where $A$ is the projected area of the whole plane.
+where $A$ is again the projected area of the whole plane.
 
 \begin{equation}
-    -m(t)\frac{v(t)^2}{r}=-mg+ L_u
+    -m(t)\frac{v(t)^2}{r}=-mg+ L_r -PA
 \end{equation}
 
-were we dropped the pressure term just to have an estimate altitude
+where again we can use the approximation
+\begin{equation}
+  \Rightarrow  -m\frac{v^2}{R_{\text{earth}}}= -mg- P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A +\frac{\beta }{2}\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |\vec{v}-\vec{u}|^2S
+\end{equation}
 
 \begin{equation}
-  \Rightarrow \frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\frac{\beta C_L}{2} \rho_0 u^2S}=  \left(\frac{T_0-\frac{6.5h}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1}    
+\beta= \frac{2}{\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |\vec{v}-\vec{u}|^2S} \left(-m\frac{v^2}{R_{\text{earth}}} + mg+ P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A \right)
 \end{equation}
 
+With that we can obtain the value of the lift coefficient to keep the plane at a certain H below the tropopause.
 \printbibliography
 
 \end{document}

@@ -257,10 +257,16 @@ where the control variables are
 In practice, instead of controlling $\alpha(t)$ and $\dot m(t)$ for every time step, we can instead represent each of these as piece-wise constant functions, each with about 10 different steps, and then minimise for the total of 20 steps. This allows us to refine simulations by making $dt$ small while having a small number of control variables.
 
 Naturally, we can also minimise the flight time as well as achieve the destination $\vec x_B$, which leads to the objective function:
-\[
-\min_{\vec \alpha, \dot{\vec m}} c_t | t_B - t_A| + | \vec x(t_B) - \vec x_B|, \quad \text{(minimise flight time)}
-\]
+\begin{equation} \label{eqn:objective-flight-time}
+    \min_{\vec \alpha, \dot{\vec m}} c_t | t_B - t_A| + | \vec x(t_B) - \vec x_B|, \quad \text{(minimise flight time)}
+\end{equation}
 where $c_t$ is an appropriately chosen constant. To make the above robust, we should in fact non-dimensionalise each of the parts, and use a constant, such as $c_t$ to give the appropriate weighting. For example, \href{https://github.com/arturgower/AircraftRouteDynamics.jl/blob/354db5b80cef8d20cd8fcf031ec3f446823477eb/src/equations-motion.jl#L168}{in the code} the goal of minimising the total flight time 100 times less important than achieve the final destination.
+
+We can choose to minimise any feature of the flight, such as minimising the total fuel used:
+\begin{equation} \label{eqn:objective-fuel-use}
+    \min_{\vec \alpha, \dot{\vec m}} c_t | t_B - t_A| - m(t_B). \quad \text{(minimise fuel use)}
+\end{equation}
+Below we will compare different flight routes which minimise flight time or fuel use.
 
 \subsection{Code and Numerical examples}
 Here we give a brief description of the code \cite{gower2025AircraftRouteDynamics} and examples. The code used to generate the examples in this report is from \href{https://github.com/arturgower/AircraftRouteDynamics.jl/tree/v0.0.1}{AircraftRouteDynamics v0.0.1}. Note the most recent version is here: \href{https://github.com/arturgower/AircraftRouteDynamics.jl/tree/main}{AircraftRouteDynamics.jl}, which may work differently then what is described below.
@@ -282,13 +288,19 @@ In the code AircraftRouteDynamics.jl a range of parameters of the aircraft and r
     \label{fig:one-route}
 \end{figure}
 
-Finally, the package can find optimal routes
+Finally, the package can find optimal routes through a shooting method. In essence, we give an initial guess for the fuel use (usually constant rate), turns (usually zero), and initial velocity. We then use a nonlinear optimiser to adjust these parameters to minimise either the flight time \eqref{eqn:objective-flight-time} or the fuel use \eqref{eqn:objective-fuel-use}.
+
+\Cref{fig:compare-routes} compares routes that minimise flight time or fuel use for the case of a tornado like wind, whose strength is greatly exagerated to help visually distinguish between the two routes. All the configurations for these simulations are shown in the link: \href{https://github.com/arturgower/AircraftRouteDynamics.jl/tree/v0.0.1}{AircraftRouteDynamics v0.0.1} .
 
 \begin{figure}
     \centering
-    \includegraphics[width = 0.49\linewidth]{readme-4.png}
-    \includegraphics[width = 0.49\linewidth]{readme-5.png}
+    \includegraphics[width = 0.59\linewidth]{readme-5.png}
+    \includegraphics[width = 0.4\linewidth]{readme-6.png}
+\caption{Compares two routes one which minimise fuel use and other which minimises total flight time. On the left we see that fastest flight time took a more direct route, while the fuel efficient route was longer but made better use of the wind. On the right we see how the fule efficient route used less fuel. Note wind strength was greatly exagerated.}
+\label{fig:compare-routes}
 \end{figure}
+
+
 \section{Calculating the Lift coefficient to keep the aircraft at a certain Height}
 
 \subsection{Lift coefficient above the tropopause}
@@ -352,7 +364,7 @@ Depending on which parameter we wish to control.
 
 An important point to remember is that when the plane banks, a component of the lift contributes to the turn. However, this effect is not accounted for in our model due to a lack of available information.
 
-\subsection{Lift coefficient below below the tropopause}
+\subsection{Lift coefficient below the tropopause}
 
 Another formula can be used to approximate density and pressure below the tropopause as explained in the previous section. The air density at a certain altitude can be approximated as \cite{nuic2004bada}
 

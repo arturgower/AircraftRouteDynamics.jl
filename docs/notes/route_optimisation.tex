@@ -51,7 +51,7 @@ The main forces acting on the aircraft are due to thrust, drag, lift, and a turn
     \label{fig:plane-sketch}
 \end{figure}
 
-As it is impractical to solve for even the rigid body dynamics of the aircraft, which would allow for rotations, we assume that the aircraft always points in the direction of travel. See \cref{fig:plane-sketch} for a sketch. 
+As it is impractical to solve for even the rigid body dynamics of the aircraft, which would allow for rotations, we assume that the aircraft always points in the direction of travel, \color{red} however this not the most accurate approximation for the heading  direction (direction where the aircraft thrusts), because in reality the aircraft does not point in the direction that it moves. A more accurate description of the dynamics would be making the aircraft heading in the direction of the velocity relative to the wind . Besides that, we choose to keep the thrust direction relative to the ground since it is more simple for a ground based navigation, while in reality the pilot is adjusting the air-relative heading to achieve the ground relative result\color{black}. See \cref{fig:plane-sketch} for a sketch. 
 
 To describe the aircraft dynamics it is useful to use a local coordinate system with basis vectors:
 \begin{align}

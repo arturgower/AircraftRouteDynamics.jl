@@ -1,9 +1,9 @@
-PWD /home/art/.julia/dev/AircraftRouteDynamics/docs/notes
+PWD /home/mep23md/Desktop/AircraftRouteDynamics.jl/docs/notes
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/art/.julia/dev/AircraftRouteDynamics/docs/notes/route_optimisation.tex
+INPUT /home/mep23md/Desktop/AircraftRouteDynamics.jl/docs/notes/route_optimisation.tex
 OUTPUT route_optimisation.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/article.cls

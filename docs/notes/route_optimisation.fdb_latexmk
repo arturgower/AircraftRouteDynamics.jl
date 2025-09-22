@@ -1,20 +1,20 @@
 # Fdb version 3
-["bibtex route_optimisation"] 1758291077 "route_optimisation.aux" "route_optimisation.bbl" "route_optimisation" 1758294936
+["bibtex route_optimisation"] 1758547024 "route_optimisation.aux" "route_optimisation.bbl" "route_optimisation" 1758549653
   "/usr/share/texlive/texmf-dist/bibtex/bst/biblatex/biblatex.bst" 1643926307 65483 fc69f364ef63c07bf68a2ab4b323f197 ""
   "references.bib" 1758289301 783 f34b4e961f97e1af07ecb41f995f1318 ""
-  "route_optimisation-blx.bib" 1758294936 340 d46e7c4fad918b6ebd1f23a9db1b6240 "pdflatex"
-  "route_optimisation.aux" 1758294936 7286 43973bd461bc8d86748c5728f3781c95 "pdflatex"
+  "route_optimisation-blx.bib" 1758549653 340 d46e7c4fad918b6ebd1f23a9db1b6240 "pdflatex"
+  "route_optimisation.aux" 1758549653 7344 43fc4961de02996c8474801bb88c42cc "pdflatex"
   (generated)
   "route_optimisation.bbl"
   "route_optimisation.blg"
-["pdflatex"] 1758294935 "/home/mep23md/Desktop/AircraftRouteDynamics.jl/docs/notes/route_optimisation.tex" "route_optimisation.pdf" "route_optimisation" 1758294936
+["pdflatex"] 1758549652 "/home/mep23md/Desktop/AircraftRouteDynamics.jl/docs/notes/route_optimisation.tex" "route_optimisation.pdf" "route_optimisation" 1758549653
   "../imgs/configure-aircraft.png" 1758289301 57715 ff59400c73e6e4f267d97f47e07ce16f ""
   "../imgs/readme-1.png" 1758289301 105869 e9a8420610a226b69f4bf551815f7ac7 ""
   "../imgs/readme-5.png" 1758289301 106858 9ec92b992334a667c415063f2e8ca912 ""
   "../imgs/readme-6.png" 1758289301 14203 6357a9018ffd37a6ee10c68205c4db93 ""
   "../imgs/run-aircraft.png" 1758289301 33681 c5334ceba3ff772d9567169ead8d29c7 ""
   "/etc/texmf/web2c/texmf.cnf" 1713185809 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/mep23md/Desktop/AircraftRouteDynamics.jl/docs/notes/route_optimisation.tex" 1758294935 25851 2ae91424e4c04cadbfc1c6714651e14e ""
+  "/home/mep23md/Desktop/AircraftRouteDynamics.jl/docs/notes/route_optimisation.tex" 1758549652 26638 b7993386549d824c988a030b37c30539 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1246382020 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -56,7 +56,9 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb" 1248133631 32362 179c33bbf43f19adbb3825bb4e36e57a ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb" 1248133631 31809 8670ca339bf94e56da1fc21c80635e2a ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1248133631 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1248133631 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb" 1248133631 33993 9b89b85fd2d9df0482bd47194d1d3bf3 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
@@ -141,11 +143,11 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1737370049 4379155 98693266ff65f58d9f98aff394de12d2 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1737370072 2799843 276c665242c199e9cdc971e8c4ce84bb ""
   "plane-sketch.png" 1758289301 171294 5adc71381de885ce4c3888a8d4940aaf ""
-  "route_optimisation.aux" 1758294936 7286 43973bd461bc8d86748c5728f3781c95 "pdflatex"
-  "route_optimisation.bbl" 1758291077 2793 b62c484abccc3a65226ae8577f41e10d "bibtex route_optimisation"
-  "route_optimisation.out" 1758294936 1655 2485ed86ca68e35c9dc2d3caa6af7987 "pdflatex"
-  "route_optimisation.run.xml" 1758294936 2648 c9d0e38da1e9bd3548a7024cb9cac016 "pdflatex"
-  "route_optimisation.tex" 1758294935 25851 2ae91424e4c04cadbfc1c6714651e14e ""
+  "route_optimisation.aux" 1758549653 7344 43fc4961de02996c8474801bb88c42cc "pdflatex"
+  "route_optimisation.bbl" 1758547024 2793 b62c484abccc3a65226ae8577f41e10d "bibtex route_optimisation"
+  "route_optimisation.out" 1758549653 1655 2485ed86ca68e35c9dc2d3caa6af7987 "pdflatex"
+  "route_optimisation.run.xml" 1758549653 2648 c9d0e38da1e9bd3548a7024cb9cac016 "pdflatex"
+  "route_optimisation.tex" 1758549652 26638 b7993386549d824c988a030b37c30539 ""
   (generated)
   "route_optimisation-blx.bib"
   "route_optimisation.aux"

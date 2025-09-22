@@ -204,7 +204,7 @@ because $\dot {\vec e}_{v-u}$ is orthogonal to ${\vec e}_{v-u}$. Substituting th
 \end{equation}
 To obtain $b$ we use 
 \begin{equation}
-b = \dot{\vec e}_{v-u} \cdot  {\vec e}_r = - {\vec e}_{v-u} \cdot  \dot {\vec e}_r =  - {\vec e}_{v-u} \cdot  {\vec v} / r = - v / r,    
+b = \dot{\vec e}_{v-u} \cdot  {\vec e}_r = - {\vec e}_{v-u} \cdot  \dot {\vec e}_r =  - {\vec e}_{v-u} \cdot  {\vec v} / r = - \frac{(v^2-\vec v \cdot \vec{u})}{|\vec v-\vec u| } \frac{1}{r},    
 \end{equation}
 where we also used the $\vec e_r = \vec r / r \implies \dot{\vec e}_r = \vec v / r$ for fixed $r$.
 
@@ -229,7 +229,7 @@ where we also used the $\vec e_r = \vec r / r \implies \dot{\vec e}_r = \vec v /
  
 To summarise we can use the above to update the direction $\vec e_{v-u}$
 \begin{equation}
-    \vec e_{v-u}(t+h) = \vec e_{v-u}(t) + a h \vec e_p(t) - \frac{v h}{r} \vec e_r(t)
+    \vec e_{v-u}(t+h) = \vec e_{v-u}(t) + a h \vec e_p(t) - \frac{(v^2-\vec v \cdot \vec{u})}{|\vec v-\vec u| } \frac{ h}{r} \vec e_r(t)
 \end{equation}
 where using the coordinate system $(\theta,\phi,r)$ we always have that $\vec e_r = [0,0,1]$. As we have made first order approximations in $h$ the norm of $\vec e_{v-u}(t+h)$ will only be approximately 1. It is better to correct this by taking $ \vec e_{v-u}(t+h)  \leftarrow  \vec e_{v-u}(t+h) / | \vec e_{v-u}(t+h) |$. Finally, we can then update the perpendicular direction:
 \begin{equation}

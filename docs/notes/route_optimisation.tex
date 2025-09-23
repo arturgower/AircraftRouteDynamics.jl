@@ -71,8 +71,7 @@ where $\dot m$ is the rate of change of mass in time (from using fuel), $v = |\v
 
 A simple and effective choice for thrust is
 \begin{equation}
-    T(\dot{m}) = - \dot m C_{T} \quad \text{and} \quad 
-    L_p (v, \alpha) = v^2 \alpha,
+    T(\dot{m}) = - \dot m C_{T} 
 \end{equation}
 where $C_T$ is a constant which describes how efficiently fuel burn $\dot m$ is converted into a thrust. More accurately, 
 \[
@@ -82,7 +81,7 @@ for subsonic flight \cite[Chapter 4]{anderson2005introduction}, where exhaust ve
 
 A simple and effective formula for the turning force is
 \begin{equation}
-    L_p (v, \alpha) = |(\vec v - \vec u) \cdot \vec e_{v-u}|^2 \alpha.
+    L_p (v, \alpha) = |\vec v - \vec u|^2 \alpha.
 \end{equation}
 In practive, turning is due to rolling and then lift. The forces that lead to rolling and lift are due to wind drag, which is proportional to the relative airspeed in the direction of travel. The variable $\alpha$ is bounded: $\alpha \in [-C_\alpha, C_\alpha]$, where the positive constant $C_\alpha$ depends on the type of aircraft.
 
@@ -123,13 +122,12 @@ To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms
 \[
 \vec w = w_v \vec e_{v-u} + w_p \vec e_p + w_r \vec e_r.
 \]
-
-Next we rewrite the expression:
+Next we rewrite the expression, where we assume that the wind speed also is in the same plane as the aircraft moves:
 \begin{align} \label{eqn:mass-momentum}
     \dot{m}\vec{v} + m \dot{\vec{v}} &= \dot{m}|\vec v -\vec u| \vec e_{v-u} + m \frac{d}{dt}|\vec v- \vec u| \vec e_{v-u} + m |\vec{v}-\vec{u}| \dot{\vec{e}}_{v-u} + \dot{m}(\vec{u} \cdot \vec{e}_{v-u})\vec{e}_{v-u}\\
                                      & +\dot{m}(\vec u \cdot \vec e_p) \vec{e}_p +\dot m (\vec{u} \cdot \vec{e}_{v-u})\vec{e}_{v-u} + m(\dot{\vec{u}}\cdot \vec{e}_{v-u})\vec{e}_{v-u} + m(\dot{\vec{u}}\cdot \vec{e}_{p})\vec{e}_{p} .
 \end{align}
-To rewrite $\dot{\vec{e}}_v$ we use the standard identities for basis vectors $\frac{d}{dt}(\vec e_{v-u} \cdot \vec e_{v-u})=0$
+To rewrite $\dot{\vec{e}}_{v-u}$ we use the standard identities for basis vectors $\frac{d}{dt}(\vec e_{v-u} \cdot \vec e_{v-u})=0$
 % \begin{equation}
 %   \frac{d}{dt}(\vec e_{v-u} \cdot \vec e_{v-u})=0, \quad \frac{d}{dt} (\vec e_{v-u} \cdot \vec{e}_r)=0,  \quad \text{and} \quad \frac{d}{dt}(\vec e_{v-u} \cdot \vec{e}_p) = 0,
 % \end{equation}
@@ -190,11 +188,11 @@ into \eqref{eqn:update_thetaphi} and solving for $\theta(t+h)$ and $\phi(t+h)$. 
 
 The equations of motion (\ref{eqn:thrust-momentum} - \ref{eqn:lift-momentum}) can now be turned into a forward marching numerical method to predict the trajectory of the aircraft, which we briefly summarise below.
 
-Equation \eqref{eqn:thrust-momentum} can be used to update the speed $v(t)$ by substituting
+Equation \eqref{eqn:thrust-momentum} can be used to update the relative speed $|\vec{v}-\vec{u}|(t)$ by substituting
 \[
 \frac{d}{dt} { |\vec{v}-\vec{u}|}(t) = \frac{{|\vec{v}-\vec{u}|}(t+h) - |\vec{v}-\vec{u}|(t)}{h},
 \]
-and then solving for ${v}(t+h)$. From the second equation \eqref{eqn:turn-momentum} we can update the direction $\vec {e}_v$ and as a consequence $\vec e_p$. To start
+and then solving for ${|\vec v- \vec u|}(t+h)$. From the second equation \eqref{eqn:turn-momentum} we can update the direction $\vec {e}_v$ and as a consequence $\vec e_p$. To start
 \[
 \dot{\vec e}_{v-u} = a {\vec e}_p + b {\vec e}_r, 
 \]
@@ -297,7 +295,7 @@ Finally, the package can find optimal routes through a shooting method. In essen
     \centering
     \includegraphics[width = 0.59\linewidth]{readme-5.png}
     \includegraphics[width = 0.4\linewidth]{readme-6.png}
-\caption{Compares two routes one which minimise fuel use and other which minimises total flight time. On the left we see that fastest flight time took a more direct route, while the fuel efficient route was longer but made better use of the wind. On the right we see how the fule efficient route used less fuel. Note wind strength was greatly exagerated.}
+\caption{Compares two routes one which minimise fuel use and other which minimises total flight time. On the left we see that fastest flight time took a more direct route, while the fuel efficient route was longer but made better use of the wind. On the right we see how the fuel efficient route used less fuel. Note wind strength was greatly exagerated.}
 \label{fig:compare-routes}
 \end{figure}
 
@@ -311,9 +309,9 @@ The dynamics model above does not include changes due to changes in altitude. Th
 The lift force is calculated as  \cite{nuic2004bada} 
 
 \begin{equation}
-    L_r= \frac{\beta }{2} \rho |(\vec{v}-\vec{u})\cdot \vec e_{v-u}|^2S
+    L_r= \frac{\beta }{2} \rho |\vec{v}- \vec{u}|^2S
 \end{equation}
-Where $|\vec{v}-\vec{u}|$ is the speed of the plane related to the wind, $\rho$ is the air density, m is the mass of the plane, g is gravity , S is the area of the wing  projected at the plane normal to $\vec{e}_r$, and $\beta$ is the lift control parameter. From that we can see that the lift force is proportional to the air density. However the air density varies with the altitude of the aircraft. This dependece also can be approximatted by different formulas depending on the Altitude. For Heights above the tropopause  \cite{nuic2004bada} which is the altitude that separates the troposphere from the stratosphere ($\approx 11000$m) the density varies as
+Where $|\vec{v}-\vec{u}|$ is the speed of the plane relative to the wind, $\rho$ is the air density, m is the mass of the plane, g is gravity , S is the area of the wing  projected at the plane normal to $\vec{e}_r$, and $\beta$ is the lift control parameter. From that we can see that the lift force is proportional to the air density. However the air density varies with the altitude of the aircraft. This dependece also can be approximatted by different formulas depending on the Altitude. For Heights above the tropopause  \cite{nuic2004bada} which is the altitude that separates the troposphere from the stratosphere ($\approx 11000$m) the density varies as
 
 \begin{equation}
     \rho= \rho_{\text{trop}}e^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)},
@@ -336,11 +334,11 @@ where $A$ is the projected area of the whole plane. Then the equation of motion 
 \end{equation}
 
 \begin{equation}
-     -m(t)\frac{v(t)^2}{r}=-mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |(\vec{v}-\vec{u})\cdot \vec e_{v-u}|^2S
+     -m(t)\frac{v(t)^2}{r}=-mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |\vec{v}- \vec{u}|^2S
    \end{equation}
 notice that $r=R_{\text{earth}}+H$ where $R_{\text{earth}}\approx 6378\text{km}$. Then the assumption that $R_{\text{earth}}>> H$ is reasonable to do, so we approximate $r\approx R_{\text{earth}}$ on the above 
 \begin{equation}
-    -m\frac{v^2}{R_{\text{earth}}}= -mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |(\vec{v}-\vec{u})\cdot \vec e_{v-u}|^2S
+    -m\frac{v^2}{R_{\text{earth}}}= -mg-  P_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)}A +\frac{\beta }{2} \rho_{\text{trop}}\mathrm{e}^{-\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} |\vec{v}- \vec{u}|^2S
 \end{equation}
 Isolating $H$  we have that
 %\begin{equation}
@@ -355,11 +353,11 @@ Isolating $H$  we have that
 %\end{equation}
 
 \begin{equation}
-    H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |(\vec{v}-\vec{u})\cdot \vec e_{v-u}|^2S\right)}\right)+h_{\text{trop}},
+    H= - \frac{RT_{\text{trop}}}{g}\log \left(\frac{-m\frac{v^2}{R_{\text{earth}}} +mg}{\left(-  P_{\text{trop}}A +\frac{\beta }{2} \rho_{\text{trop}} |\vec{v}- \vec{u}|^2S\right)}\right)+h_{\text{trop}},
 \end{equation}
 or isolating $\beta$ that
 \begin{equation}
-\beta=    \frac{2}{\rho_{\text{trop}}|(\vec{v}-\vec{u})\cdot \vec e_{v-u}|^2S} \left( \mathrm{e}^{\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} \left( -\frac{m v^2}{R_{\text{earth}}}+mg\right) + P_{\text{trop}}A  \right)
+\beta=    \frac{2}{\rho_{\text{trop}}|\vec{v}- \vec{u}|^2S} \left( \mathrm{e}^{\left( \frac{g}{RT_{\text{trop}}}(H-h_{\text{trop}}) \right)} \left( -\frac{m v^2}{R_{\text{earth}}}+mg\right) + P_{\text{trop}}A  \right)
 \end{equation}
 Depending on which parameter we wish to control. 
 
@@ -377,22 +375,19 @@ So as in the previous section, the total external force on the direction $\vec{e
 \begin{equation}
     w_r=-mg -PA 
 \end{equation}
-
 where $A$ is again the projected area of the whole plane.
 
 \begin{equation}
     -m(t)\frac{v(t)^2}{r}=-mg+ L_r -PA
 \end{equation}
-
 where again we can use the approximation
 \begin{equation}
-  \Rightarrow  -m\frac{v^2}{R_{\text{earth}}}= -mg- P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A +\frac{\beta }{2}\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |(\vec{v}-\vec{u})\cdot \vec e_{v-u}|^2S
+  \Rightarrow  -m\frac{v^2}{R_{\text{earth}}}= -mg- P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A +\frac{\beta }{2}\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |\vec{v}- \vec{u}|^2S
 \end{equation}
 
 \begin{equation}
-\beta= \frac{2}{\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |(\vec{v}-\vec{u})\cdot \vec e_{v-u}|^2S} \left(-m\frac{v^2}{R_{\text{earth}}} + mg+ P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A \right)
+\beta= \frac{2}{\rho_0 \left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}-1} |\vec{v}- \vec{u}|^2S} \left(-m\frac{v^2}{R_{\text{earth}}} + mg+ P_0\left(\frac{T_0-\frac{6.5H}{1000}}{T_0}\right)^{-\frac{g}{k_TR}}A \right)
 \end{equation}
-
 With that we can obtain the value of the lift coefficient to keep the plane at a certain H below the tropopause.
 \printbibliography
 

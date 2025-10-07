@@ -47,25 +47,25 @@ The main forces acting on the aircraft are due to thrust, drag, lift, and a turn
 \begin{figure}[ht]
     \centering
     \includegraphics[width = 0.4\linewidth]{"plane-sketch.png"}
-    \caption{A sketch showing that the aircraft velocity vector is given by $\vec v$ (relative to the ground), and the velocity of the wind (relative to the ground) is given by $\vec u$. We approximate that the aircraft always points in the direction of the velocity relative to the wind.}
+    \caption{A sketch showing that the aircraft velocity vector is given by $\vec v$ (relative to the air speed), and the velocity of the wind (relative to the ground) is given by $\vec u$. We approximate that the aircraft always points in the direction of the velocity relative to the wind.}
     \label{fig:plane-sketch}
 \end{figure}
 
-As it is impractical to solve for even the rigid body dynamics of the aircraft, which would allow for rotations, we assume that the aircraft always points in the direction of the velocity relative to the wind, which is the heading direction \footnote{For the figures in this report, we assumed that the heading direction was the direction of the velocity relative to the ground which is not accurate with realistic dynamics. This can be adapted without much effort for future work}. See \cref{fig:plane-sketch} for a sketch. 
+As it is impractical to solve for even the rigid body dynamics of the aircraft, which would allow for rotations, we assume that the aircraft always points in the direction of the velocity relative to the wind, which is the heading direction \footnote{For the figures in this report, we assumed that the heading direction was the direction of the velocity relative to the ground. This can be adapted without much effort for future work, but we ran out of time.}. See \cref{fig:plane-sketch} for a sketch. 
 
 To describe the aircraft dynamics it is useful to use a local coordinate system with basis vectors for a ground based navigation:
 \begin{align}
-    & \vec e_{v-u} \quad \text{(the heading direction )}
+    & \vec e_{v} \quad \text{(the heading direction )}
     \\
     & \vec e_r \quad \text{(radial direction from earth centre to aircraft)}
     \\
-    & \vec e_p = \vec e_r \times \vec e_{v-u}  \quad \text{(perpendicular to heading direction)}
+    & \vec e_p = \vec e_r \times \vec e_{v}  \quad \text{(perpendicular to heading direction)}
 \end{align}
-where we will only model the 2D dynamics and assume the altitude is fixed, so that $\vec e_{v-u}$ is always orthogonal to $\vec e_r$. Note that changes of altitude based on balance of lift with gravity can easily be accomodated without modelling the motion that leads to that change. 
+where we will only model the 2D dynamics and assume the altitude is fixed, so that $\vec e_{v}$ is always orthogonal to $\vec e_r$. Note that changes of altitude based on balance of lift with gravity can easily be accomodated without modelling the motion that leads to that change. 
 
 There are two main forces on the aircraft, those that can be controlled by the pilot $\vec f$ and those that external $\vec w$. The forces that can be controlled are: 
 \begin{equation}
-    \vec{f} =  T(\dot{m}) \vec{e}_{v-u} + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r,
+    \vec{f} =  T(\dot{m}) \vec{e}_{v} + {L_p}(\vec v, \alpha) \vec{e}_p  + {L_r}(\vec v,\beta) \vec{e}_r,
 \end{equation}
 where $\dot m$ is the rate of change of mass in time (from using fuel), $v = |\vec v|$, $T(\dot{m},t)$ is the force from thrust, ${L_p}(v, \alpha)$ is a force which leads to turns in the $\vec e_p$ direction, where $\alpha$ captures the amount the pilot tries to turn, and $L_r(v,\beta)$ are the lift forces, where $\beta$ is the amount to pilot tries to lift. 
 
@@ -77,13 +77,14 @@ where $C_T$ is a constant which describes how efficiently fuel burn $\dot m$ is 
 \[
 C_T = \text{(exhaust velocity)} - \text{(relative airspeed)},
 \] 
-for subsonic flight \cite[Chapter 4]{anderson2005introduction}, where exhaust velocity is the speed of exhaust relative to the aircraft, and relative airspeed equals $|\vec v - \vec u|$ is the speed of air relative to the aircraft.
+for subsonic flight \cite[Chapter 4]{anderson2005introduction}, where exhaust velocity is the speed of exhaust relative to the aircraft, and relative airspeed is $\vec v$.
 
 A simple and effective formula for the turning force is
 \begin{equation}
-    L_p (v, \alpha) = |\vec v - \vec u|^2 \alpha.
+    L_p (v, \alpha) = v^2 \alpha, \quad \text{with} \;\; v = |\vec v|,
 \end{equation}
-In practive, turning is due to rolling and then lift. The forces that lead to rolling and lift are due to wind drag, which is proportional to the relative airspeed in the direction of travel. The variable $\alpha$ is bounded: $\alpha \in [-C_\alpha, C_\alpha]$, where the positive constant $C_\alpha$ depends on the type of aircraft.
+
+In practice, turning is due to rolling and then lift. The forces that lead to rolling and lift are due to wind drag, which is proportional to the relative airspeed in the direction of travel. The variable $\alpha$ is bounded: $\alpha \in [-C_\alpha, C_\alpha]$, where the positive constant $C_\alpha$ depends on the type of aircraft.
 
 The dynamics of the aircraft are now governed by balance of momentum:
 % \begin{equation}
@@ -109,37 +110,40 @@ The dynamics of the aircraft are now governed by balance of momentum:
 % Now we write the movement equations on the there directions ($\vec e_{v-u}(t), \hat n(t),\vec{e}_r(t)$)
 \begin{align}
     % \frac{dp}{dt}= \vec{f} \implies 
-   \notag & \frac{d}{dt} (m(t) \vec{v}(t)) = \vec{f} + \vec{w} \implies
+   \notag & \frac{d}{dt} (m(t) \vec{v}(t) + m(t) \vec{u}(t)) = \vec{f} + \vec{w} \implies
 \\ \label{eqns:motion-vector}
-    & \dot{m}\vec{v} + m \dot{\vec{v}} = T(\dot{m}) \vec e_{v-u} + {L_p}(\vec v - \vec u, \alpha) \vec{e}_p  + {L_r}(\vec v - \vec u,\beta) \vec{e}_r + \vec w,
+    & \dot{m}(\vec{v}+ \vec u) + m (\dot{\vec{v}} + \dot{\vec{u}}) = T(\dot{m}) \vec e_{v} + {L_p}(\vec v, \alpha) \vec{e}_p  + {L_r}(\vec v,\beta) \vec{e}_r + \vec w,
 % \implies
 % \\
 %     & \dot{m}(t)v(t)\vec e_{v-u}(t) +m(t)\dot v(t)\vec e_{v-u}(t) + m(t) v(t)\dot{\vec e_{v-u}}(t) = \vec{f}
 \end{align}
-where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v - \vec u$, however we do not need to give explicit forms for this forces, nor for the lift $L_r$ to simplify the equations of motion. 
+where $\vec w$ are the forces due to external factors, such as the wind and altitude. It is generally a function of the relative airspeed $\vec v$, however we do not need to give explicit forms for this forces, nor for the lift $L_r$ to simplify the equations of motion. 
 
-To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_{v-u}, \vec e_p, \vec e_r$. First we assume that the external forces can be decomposed in the form:
+To simplify \eqref{eqns:motion-vector} we need to write all expressions in terms of the local coordinate basis $\vec e_{v}, \vec e_p, \vec e_r$. First we decompose the external forces and wind speed in the form:
 \[
-\vec w = w_v \vec e_{v-u} + w_p \vec e_p + w_r \vec e_r.
+\vec w = w_v \vec e_{v} + w_p \vec e_p + w_r \vec e_r \quad \text{and} \quad \vec u = u_v \vec e_{v} + u_p \vec e_p,
 \]
-Next we rewrite the expression, where we assume that the wind speed also is in the same plane as the aircraft moves:
-\begin{align} \label{eqn:mass-momentum}
-    \dot{m}\vec{v} + m \dot{\vec{v}} &= \dot{m}|\vec v -\vec u| \vec e_{v-u} + m \frac{d}{dt}|\vec v- \vec u| \vec e_{v-u} + m |\vec{v}-\vec{u}| \dot{\vec{e}}_{v-u} + \dot{m}(\vec{u} \cdot \vec{e}_{v-u})\vec{e}_{v-u}\\
-                                     & +\dot{m}(\vec u \cdot \vec e_p) \vec{e}_p +\dot m (\vec{u} \cdot \vec{e}_{v-u})\vec{e}_{v-u} + m(\dot{\vec{u}}\cdot \vec{e}_{v-u})\vec{e}_{v-u} + m(\dot{\vec{u}}\cdot \vec{e}_{p})\vec{e}_{p} .
+where we assume there is no wind in the radial direction $\vec e_r$. Next we rewrite the expressions
+\begin{align}
+    & \dot m \vec v +  m \dot{\vec v} = \dot m v \vec e_{v} +  m \dot{v} \vec e_{v} +  m v \dot{\vec e}_{v},
+    \\
+    & \dot{\vec u} = \dot u_v \vec e_{v} + \dot u_p \vec e_p + u_v \dot{\vec e}_{v} + \dot u_p \dot{\vec e}_p.
 \end{align}
-To rewrite $\dot{\vec{e}}_{v-u}$ we use the standard identities for basis vectors $\frac{d}{dt}(\vec e_{v-u} \cdot \vec e_{v-u})=0$
+
+To rewrite $\dot{\vec{e}}_{v}$, and likewise $\dot{\vec{e}}_{p}$, we use the standard identities for basis vectors $\frac{d}{dt}(\vec e_{v} \cdot \vec e_{v})=0$
 % \begin{equation}
 %   \frac{d}{dt}(\vec e_{v-u} \cdot \vec e_{v-u})=0, \quad \frac{d}{dt} (\vec e_{v-u} \cdot \vec{e}_r)=0,  \quad \text{and} \quad \frac{d}{dt}(\vec e_{v-u} \cdot \vec{e}_p) = 0,
 % \end{equation}
-to conclude that $\dot{\vec{e}}_{v-u}$ is orthogonal to ${\vec{e}}_{v-u}$ and can be expanded in the form:
+to conclude that $\dot{\vec{e}}_{v}$ is orthogonal to ${\vec{e}}_{v}$ and can be expanded in the form:
 \[
-\dot{\vec{e}}_{v-u} =  (\dot{\vec{e}}_{v-u} \cdot \vec{e}_p)\vec{e}_p + (\dot{\vec{e}}_{v-u} \cdot \vec{e}_r)\vec{e}_r,
+\dot{\vec{e}}_{v} =  (\dot{\vec{e}}_{v} \cdot \vec{e}_p)\vec{e}_p + (\dot{\vec{e}}_{v} \cdot \vec{e}_r)\vec{e}_r.
+% \dot{\vec{e}}_{p} =  (\dot{\vec{e}}_{p} \cdot \vec{e}_v)\vec{e}_v + (\dot{\vec{e}}_{p} \cdot \vec{e}_r)\vec{e}_r.
 \] 
-which combined with \eqref{eqn:mass-momentum}, and the separation of the external forces, leads us to rewrite the equations of motion \eqref{eqns:motion-vector} in the form 
+Substituting all the above into \eqref{eqns:motion-vector} leads us to rewrite the equations of motion \eqref{eqns:motion-vector} in the form 
 \[ 
-a_v \vec e_{v-u} + a_p \vec e_p + a_r \vec e_r = 0.
+a_v \vec e_{v} + a_p \vec e_p + a_r \vec e_r = 0,
 \]
-The above then implies that $a_v =0$, $a_p =0$, and $a_r =0$, which written in full become:
+which in turn implies that $a_v =0$, $a_p =0$, and $a_r =0$, which written in full become:
 % \begin{equation}
 %    \dot{\vec e_{v-u}}(t)=  -(\dot{\vec{e}_p}(t) \cdot \vec e_{v-u})\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec e_{v-u})\vec{e}_r
 % \end{equation}
@@ -147,15 +151,34 @@ The above then implies that $a_v =0$, $a_p =0$, and $a_r =0$, which written in f
 %     \dot{m}(t)v(t)\vec e_{v-u}(t) +m(t)\dot v(t)\vec e_{v-u}(t) + m(t) v(t)( -(\dot{\vec{e}_p}(t) \cdot \vec e_{v-u})\vec{e}_p- (\dot{\vec{e}_r}(t) \cdot \vec e_{v-u})\vec{e}_r) = \vec{f}
 % \end{equation}
 % then we isolate the terms in each direction, getting three differential equations
-\begin{align} \label{eqn:thrust-momentum}
-    &  \dot{m} |\vec v- \vec u| + m \frac{d}{dt}|\vec v- \vec u| = w_v + T(\dot{m}) - \dot m (\vec{u} \cdot \vec{e}_{v-u})- m(\dot{\vec{u}}\cdot \vec{e}_{v-u}),
+\begin{align} 
+    & \dot m v  +  m \dot{v} + \dot{m} u_v +  m \dot u_v + (\dot{\vec{e}}_{p} \cdot \vec{e}_v)m \dot u_p   = T(\dot{m}) + w_v
     \\
-    \label{eqn:turn-momentum}
-    &  m |\vec{v}- \vec{u}|({\vec{e}}_p \cdot \dot{\vec{e}}_{v-u}) = w_p + L_p(\vec{v}-\vec{u},\alpha) - \dot m (\vec{u} \cdot \vec{e}_{p})- m(\dot{\vec{u}}\cdot \vec{e}_{p}),
+    & m v (\dot{\vec{e}}_{v} \cdot \vec{e}_p) + \dot{m} u_p + m \dot u_p +
+    m u_v (\dot{\vec{e}}_{v} \cdot \vec{e}_p)\vec{e}_p
+    % + m \dot u_p \dot{\vec e}_p 
+    =   {L_p}(\vec v, \alpha)  + w_p
     \\
-    \label{eqn:lift-momentum}
-    & m |\vec{v}- \vec{u}|({\vec{e}_r}(t) \cdot \dot{\vec{e}}_{v-u})=w_r +L_r(\vec{v}-\vec{u},\beta).
+    & m v (\dot{\vec{e}}_{v} \cdot \vec{e}_r)\vec{e}_r + m u_v (\dot{\vec{e}}_{v} \cdot \vec{e}_r)\vec{e}_r 
+    + (\dot{\vec{e}}_{p} \cdot \vec{e}_r) m \dot u_p  = {L_r}(\vec v,\beta) \vec{e}_r + w_r
 \end{align}
+
+% \begin{align} \label{eqn:thrust-momentum}
+%     &  \dot{m} v + m \dot v = w_v + T(\dot{m}) - \dot m u_v - m\dot{u}_v,
+%     \\
+%     \label{eqn:turn-momentum}
+%     &  m v({\vec{e}}_p \cdot \dot{\vec{e}}_{v}) = w_p + L_p(\vec{v}-\vec{u},\alpha) - \dot m (\vec{u} \cdot \vec{e}_{p})- m(\dot{\vec{u}}\cdot \vec{e}_{p}),
+%     \\
+%     \label{eqn:lift-momentum}
+%     & m |\vec{v}- \vec{u}|({\vec{e}_r}(t) \cdot \dot{\vec{e}}_{v-u})=w_r +L_r(\vec{v}-\vec{u},\beta).
+% \end{align}
+
+% , where we assume that the wind speed also is in the same plane as the aircraft moves:
+% \begin{align} \label{eqn:mass-momentum}
+%     \dot{m}\vec{v} + m \dot{\vec{v}} &= \dot{m}|\vec v -\vec u| \vec e_{v-u} + m \frac{d}{dt}|\vec v- \vec u| \vec e_{v-u} + m |\vec{v}-\vec{u}| \dot{\vec{e}}_{v-u} + \dot{m}(\vec{u} \cdot \vec{e}_{v-u})\vec{e}_{v-u}\\
+%                                      & +\dot{m}(\vec u \cdot \vec e_p) \vec{e}_p +\dot m (\vec{u} \cdot \vec{e}_{v-u})\vec{e}_{v-u} + m(\dot{\vec{u}}\cdot \vec{e}_{v-u})\vec{e}_{v-u} + m(\dot{\vec{u}}\cdot \vec{e}_{p})\vec{e}_{p} .
+% \end{align}
+
 
 \subsection{Forward marching numerical method}
 
